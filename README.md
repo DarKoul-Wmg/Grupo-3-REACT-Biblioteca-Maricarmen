@@ -1,6 +1,3 @@
-### **README.md**
-
-````markdown
 # Project Name
 
 Welcome to the project! This is a project built with **React** and **Vite**.
@@ -21,9 +18,6 @@ First, clone this repository to your local machine. Open a terminal and run:
 ```bash
 git clone https://github.com/lean051082/biblioteca-maricarmen-react.git
 ```
-````
-
-Replace `your-username` and `your-repository` with the correct values.
 
 ### 2. Install Dependencies
 
