@@ -1,7 +1,3 @@
-¡Claro! Aquí tienes la versión en inglés del archivo `README.md` para tu proyecto de React con Vite:
-
----
-
 ### **README.md**
 
 ````markdown
