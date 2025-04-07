@@ -13,11 +13,11 @@ function BookList() {
   return (
     <div className="container">
       <img src={imgReact} />
-      <h1>Listado de Libros</h1>
+      <h1 className='font-bold'>Listado de Libros</h1>
       {books.length > 0 ? (
         books.map((book) => <BookItem key={book.id} book={book} />)
       ) : (
-        <p>Cargando libros...</p>
+        <p className='color-red'>Cargando libros...</p>
       )}
     </div>
   );
