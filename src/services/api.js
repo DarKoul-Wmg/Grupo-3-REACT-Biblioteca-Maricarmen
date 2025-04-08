@@ -1,5 +1,6 @@
-// const API_URL = 'http://localhost:8000/api/llibres'; // Ajusta según tu Django API (uso local)
-const API_URL = 'https://biblioteca3.ieti.site/api/llibres'; // Ajusta según tu Django API (uso en producción)
+const API_ROOT_LOCAL = 'http://localhost:8000'
+const API_ROOT_PRODUCTION = 'https://biblioteca3.ieti.site'
+const API_URL = API_ROOT_PRODUCTION+'/api/llibres'; // Ajusta según tu Django API (uso en local o producción)
 
 export const getBooks = () => {
   console.log('llamando API...');
