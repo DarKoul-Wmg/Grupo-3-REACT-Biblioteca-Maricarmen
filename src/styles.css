@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-@font-face{
+@font-face {
   font-family: 'Montserrat';
   src: url('assets/fonts/Montserrat-VariableFont_wght.ttf')format('truetype');
   font-weight: 100 900;
@@ -41,11 +41,4 @@ h4 {
 ul {
   list-style: none;
   padding: 0;
-}
-
-ul li {
-  background: #e9ecef;
-  padding: 5px;
-  margin: 5px 0;
-  border-radius: 3px;
 }
