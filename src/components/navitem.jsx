@@ -48,7 +48,7 @@ export default function SidebarNavigation() {
     {
       icon: <FileIcon />,
       label: "Update Database",
-      component: "AnotherComponent",
+      component: "FileUpload",
     },
   ];
 

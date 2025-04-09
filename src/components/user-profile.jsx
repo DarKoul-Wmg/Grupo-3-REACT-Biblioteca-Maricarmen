@@ -1,7 +1,13 @@
 import React from "react";
 import Badge from "./ui/badge";
 
-export default function UserProfile({ firstName, lastName, image, role }) {
+export default function UserProfile({
+  firstName,
+  school,
+  lastName,
+  image,
+  role,
+}) {
   return (
     <div className="flex items-center gap-4 mb-6">
       <div className="w-40 h-40 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
@@ -32,7 +38,7 @@ export default function UserProfile({ firstName, lastName, image, role }) {
             </Badge>
           ))}
         </div>
-        <h2 className="text-sm text-gray-500">IES Example</h2>
+        <h2 className="text-sm text-gray-500">{school}</h2>
       </div>
     </div>
   );

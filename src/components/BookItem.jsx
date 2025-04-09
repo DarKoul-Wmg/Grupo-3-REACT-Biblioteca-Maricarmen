@@ -29,8 +29,8 @@ export default function BookItem({
         <h2 className="text-2xl font-semibold text-gray-800">{title}</h2>
         <p className="text-lg text-gray-700 mt-1 font-medium">{author}</p>
         <p className="text-gray-600 mt-1 text-sm">ISBN: {isbn}</p>
-        <p className="text-gray-600 mt-1 text-sm">País: {country}</p>
-        <p className="text-gray-600 mt-1 text-sm">Número de páginas: {pages}</p>
+        <p className="text-gray-600 mt-1 text-sm">Country: {country}</p>
+        <p className="text-gray-600 mt-1 text-sm">Page Number: {pages}</p>
         <p className="text-gray-500 mt-4 text-sm line-clamp-3">
           Editorial:{editorial}
         </p>

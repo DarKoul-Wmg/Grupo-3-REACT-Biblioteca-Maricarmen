@@ -21,34 +21,29 @@ export default function UserForm() {
     setErrorMessage("");
 
     try {
-      const updatedUser = await updateUserProfile(
-        userToken,
-        email,
-        telefon,
-        avatar
-      );
-      setSuccessMessage("Perfil actualizado correctamente.");
-      console.log("Usuario actualizado:", updatedUser);
+      await updateUserProfile(userToken, email, telefon, avatar);
+      setSuccessMessage("Profile Updated Successfully.");
     } catch (err) {
-      setErrorMessage(err.message || "Error al actualizar el perfil.");
+      setErrorMessage(err.message || "Error while updating profile.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex content-evenly gap-2">
+    <div className="flex content-evenly gap-1">
       <UserProfile
         firstName={user?.first_name || "First Name"}
         lastName={user?.last_name || "Last Name"}
+        school={user?.centre || "IES Example"}
         image={user?.imatge || null}
         role={user?.groups || ["user"]}
       />
       <div className="bg-gray-50 border border-gray-200 rounded-xl shadow-sm">
-        <div className="px-4 py-3 border-b border-gray-200">
+        <div className=" py-2 border-b border-gray-200">
           <h3 className="text-gray-800 font-semibold">Edit User Information</h3>
         </div>
-        <div className="p-4">
+        <div className="p-2">
           <form onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -75,7 +70,7 @@ export default function UserForm() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Cellphone
+                  Phone Number
                 </label>
                 <Input
                   type="text"

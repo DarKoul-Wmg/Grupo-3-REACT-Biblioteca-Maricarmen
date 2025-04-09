@@ -1,4 +1,3 @@
-
 import "./App.css";
 import "./styles.css";
 import SignIn from "./components/sign-in";
@@ -11,6 +10,7 @@ import UserDetails from "./components/user-details";
 import SearchBar from "./components/search-bar";
 import BookItem from "./components/BookItem";
 import { getBookById } from "./services/api";
+import InputCsv from "./components/InputCsv";
 
 export default function App() {
   const { user, activeComponent } = useContext(AuthContext);
@@ -34,10 +34,8 @@ export default function App() {
       switch (activeComponent) {
         case "UserDetails":
           return <UserDetails />;
-        case "AnotherComponent":
-          return <p>Holaaa</p>;
-        default:
-          return div;
+        case "FileUpload":
+          return <InputCsv />;
       }
     }
   };
@@ -60,7 +58,7 @@ export default function App() {
                   title={selectedBook.titol}
                   author={selectedBook.autor}
                   editorial={selectedBook.editorial}
-                  isbn={selectedBook.isbn}
+                  isbn={selectedBook.ISBN}
                   country={selectedBook.pais}
                   pages={selectedBook.pagines}
                 />
@@ -73,4 +71,3 @@ export default function App() {
     </div>
   );
 }
-
