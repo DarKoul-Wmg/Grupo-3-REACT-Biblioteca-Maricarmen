@@ -1,3 +1,4 @@
+
 const API_URL = "http://localhost:8000/api/"; // Ajusta según tu Django API
 
 export const getBooks = () => {
@@ -15,6 +16,21 @@ export const getBooks = () => {
     });
 };
 
+
+ /* Obtenemos el archivo CSV para ser exportado en la base de datos*/
+export const importCsv = (file) => {
+    console.log('Llamada a la API para importar CSV...');
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return fetch(API_URL + 'importcsv', {
+      method: 'POST',
+      body:FormData,
+    })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Error al importar el CSV');
 export const getBookById = (id) => {
   return fetch(`${API_URL}llibres/${id}`)
     .then((response) => {
