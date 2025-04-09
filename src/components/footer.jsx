@@ -1,10 +1,9 @@
 import footer from "../assets/footer.gif";
 export default function Footer() {
   return (
-    <footer className="bg-gray-800 text-white py-4 px-6 flex justify-between items-center fixed bottom-0 w-full">
+    <footer className="bg-gray-800 text-white py-1 px-6 flex justify-between items-center w-full">
       <div>
-        <p className="text-sm">© 2023 Your Company. All rights reserved.</p>
-        <p className="text-sm">Contact us: contact@yourcompany.com</p>
+        <p>Made by: Grup 3 AWS 2024-2025</p>
       </div>
       <div>
         <a
