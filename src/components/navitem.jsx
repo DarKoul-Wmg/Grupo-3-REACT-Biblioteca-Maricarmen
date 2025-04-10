@@ -37,8 +37,6 @@ export function FileIcon() {
 }
 
 export default function SidebarNavigation({ onSidebarClick }) {
-  const { setActiveComponent } = useContext(AuthContext);
-
   const items = [
     {
       icon: <UserIcon />,

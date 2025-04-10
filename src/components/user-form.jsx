@@ -22,9 +22,9 @@ export default function UserForm() {
 
     try {
       await updateUserProfile(userToken, email, telefon, avatar);
-      setSuccessMessage("Profile Updated Successfully.");
+      setSuccessMessage("Perfil actualitzat correctament.");
     } catch (err) {
-      setErrorMessage(err.message || "Error while updating profile.");
+      setErrorMessage(err.message || "Error en actualitzar el perfil.");
     } finally {
       setLoading(false);
     }
@@ -33,22 +33,24 @@ export default function UserForm() {
   return (
     <div className="flex content-evenly gap-1">
       <UserProfile
-        firstName={user?.first_name || "First Name"}
-        lastName={user?.last_name || "Last Name"}
-        school={user?.centre || "IES Example"}
+        firstName={user?.first_name || "Nom"}
+        lastName={user?.last_name || "Cognom"}
+        school={user?.centre || "IES Exemple"}
         image={user?.imatge || null}
-        role={user?.groups || ["user"]}
+        role={user?.groups || ["usuari"]}
       />
       <div className="bg-gray-50 border border-gray-200 rounded-xl shadow-sm">
         <div className=" py-2 border-b border-gray-200">
-          <h3 className="text-gray-800 font-semibold">Edit User Information</h3>
+          <h3 className="text-gray-800 font-semibold">
+            Edita la informació de l'usuari
+          </h3>
         </div>
         <div className="p-2">
           <form onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Name
+                  Nom
                 </label>
                 <Input
                   type="text"
@@ -59,7 +61,7 @@ export default function UserForm() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Surname
+                  Cognom
                 </label>
                 <Input
                   type="text"
@@ -70,7 +72,7 @@ export default function UserForm() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Phone Number
+                  Número de telèfon
                 </label>
                 <Input
                   type="text"
@@ -81,7 +83,7 @@ export default function UserForm() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Email
+                  Correu electrònic
                 </label>
                 <Input
                   type="email"
@@ -92,7 +94,7 @@ export default function UserForm() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Profile Picture
+                  Foto de perfil
                 </label>
                 <Input
                   type="file"
@@ -108,7 +110,7 @@ export default function UserForm() {
                 className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 disabled={loading}
               >
-                {loading ? "Updating..." : "Submit"}
+                {loading ? "Actualitzant..." : "Enviar"}
               </Button>
             </div>
           </form>

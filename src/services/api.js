@@ -1,6 +1,6 @@
 const API_ROOT_LOCAL = "http://localhost:8000/api/";
 const API_ROOT_PRODUCTION = "https://biblioteca3.ieti.site/api/";
-const API_URL = API_ROOT_LOCAL; // Ajusta según tu Django API (uso en local o producción)
+export const API_URL = API_ROOT_LOCAL; // Ajusta según tu Django API (uso en local o producción)
 
 export const getBooks = () => {
   return fetch(API_URL + "llibres")
@@ -18,7 +18,7 @@ export const getBooks = () => {
 
 /* Obtenemos el archivo CSV para ser exportado en la base de datos*/
 export const importCsv = async (file) => {
-  console.log("Llamada a la API para importar CSV...");
+  //console.log("Llamada a la API para importar CSV...");
   const formData = new FormData();
   formData.append("file", file);
 
@@ -71,7 +71,7 @@ export async function logIn(username, password) {
     }
 
     const data = await response.json();
-    console.log("Login success:", data);
+    //console.log("Login success:", data);
 
     // Guardar el token en localStorage
     localStorage.setItem("token", data.token);
@@ -97,7 +97,7 @@ export async function getUserInfo(token) {
     }
 
     const data = await response.json();
-    console.log("User info:", data["user-details"]); // Debugging
+    //console.log("User info:", data["user-details"]); // Debugging
     return data;
   } catch (err) {
     console.error("Error fetching user info:", err.message);
@@ -128,7 +128,7 @@ export async function updateUserProfile(token, email, telefon, avatar = null) {
     }
 
     const data = await response.json();
-    console.log("Perfil actualizado:", data);
+    //("Perfil actualizado:", data);
     return data;
   } catch (err) {
     console.error("Error al actualizar el perfil:", err.message);

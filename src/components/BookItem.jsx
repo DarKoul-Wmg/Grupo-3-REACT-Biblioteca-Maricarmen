@@ -11,7 +11,7 @@ export default function BookItem({
 }) {
   return (
     <div className="flex bg-white rounded-lg shadow-md overflow-hidden w-full max-w-4xl">
-      {/* Imagen del libro */}
+      {/* Imatge del llibre */}
       <div className="w-1/3 bg-gray-200 flex items-center justify-center p-4">
         {imageUrl ? (
           <img
@@ -20,20 +20,28 @@ export default function BookItem({
             className="object-cover h-48 rounded-md"
           />
         ) : (
-          <span className="text-black text-lg">Book Image</span>
+          <span className="text-black text-lg">Imatge del llibre</span>
         )}
       </div>
 
-      {/* Detalles del libro */}
+      {/* Detalls del llibre */}
       <div className="w-2/3 p-6 flex flex-col justify-center">
-        <h2 className="text-2xl font-semibold text-gray-800">{title}</h2>
-        <p className="text-lg text-gray-700 mt-1 font-medium">{author}</p>
-        <p className="text-gray-600 mt-1 text-sm">ISBN: {isbn}</p>
-        <p className="text-gray-600 mt-1 text-sm">Country: {country}</p>
-        <p className="text-gray-600 mt-1 text-sm">Page Number: {pages}</p>
-        <p className="text-gray-500 mt-4 text-sm line-clamp-3">
-          Editorial:{editorial}
-        </p>
+        {<h2 className="text-2xl font-semibold text-gray-800">{title}</h2>}
+        {<p className="text-lg text-gray-700 mt-1 font-medium">{author}</p>}
+        {<p className="text-gray-600 mt-1 text-sm">ISBN: {isbn}</p>}
+        {country && (
+          <p className="text-gray-600 mt-1 text-sm">País: {country}</p>
+        )}
+        {pages && (
+          <p className="text-gray-600 mt-1 text-sm">
+            Nombre de pàgines: {pages}
+          </p>
+        )}
+        {editorial && (
+          <p className="text-gray-500 mt-4 text-sm line-clamp-3">
+            Editorial: {editorial}
+          </p>
+        )}
       </div>
     </div>
   );

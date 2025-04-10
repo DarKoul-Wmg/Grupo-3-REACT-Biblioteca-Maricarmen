@@ -18,33 +18,38 @@ export default function SearchBar({
   const inputRef = useRef(null);
 
   useEffect(() => {
-    if (searchQuery.length < 3) {
-      setFilteredItems([]);
-      setIsOpen(false);
-      return;
-    }
+    const debounceTimeout = setTimeout(() => {
+      if (searchQuery.length < 3) {
+        setFilteredItems([]);
+        setIsOpen(false);
+        return;
+      }
 
-    let active = true;
-    setIsLoading(true);
+      let active = true;
+      setIsLoading(true);
 
-    getBooks(searchQuery).then((books) => {
-      if (!active) return;
+      getBooks(searchQuery).then((books) => {
+        //console.log("books ", books);
+        if (!active) return;
 
-      const items = books.slice(0, 5); // Obtener los primeros 5 libros
+        const items = books.slice(0, 5); // Obtener los primeros 5 libros
 
-      setFilteredItems(items);
-      setIsOpen(true);
-      setIsLoading(false);
+        setFilteredItems(items);
+        setIsOpen(true);
+        setIsLoading(false);
 
-      // Mantener el foco tras actualizar
-      requestAnimationFrame(() => {
-        inputRef.current?.focus();
+        // Mantener el foco tras actualizar
+        requestAnimationFrame(() => {
+          inputRef.current?.focus();
+        });
       });
-    });
 
-    return () => {
-      active = false;
-    };
+      return () => {
+        active = false;
+      };
+    }, 1000); // 300ms debounce delay
+
+    return () => clearTimeout(debounceTimeout);
   }, [searchQuery]);
 
   useEffect(() => {
