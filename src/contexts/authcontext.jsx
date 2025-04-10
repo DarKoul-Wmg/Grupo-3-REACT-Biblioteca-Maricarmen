@@ -17,8 +17,10 @@ export const AuthProvider = ({ children }) => {
 
   const login = (userData) => {
     setUser(userData);
+
     if (userData?.groups?.includes("Administrador")) {
       let adminUrl = API_URL;
+
       if (API_URL.includes(":8000")) {
         adminUrl = API_URL.slice(0, -4) + "/admin";
       } else {

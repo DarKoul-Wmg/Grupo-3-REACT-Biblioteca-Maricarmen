@@ -23,6 +23,7 @@ export default function App() {
   const [activeSidebarComponent, setActiveSidebarComponent] = useState(null); // Nuevo estado
 
   const handleBookSelect = (book) => {
+    console.log("BOOK OBTENIDO!", book);
     setSelectedBook(book);
     setShowBookDetails(true);
     setShowBooksTable(false);
@@ -104,24 +105,30 @@ export default function App() {
           ) : !showBookDetails && !showBooksTable ? (
             <>{renderActiveComponent()}</>
           ) : showBooksTable ? (
-            <BooksTable array={searchResults} onBookSelect={handleBookSelect} />
+            <BooksTable
+              array={searchResults}
+              onBookSelect={handleBookSelect}
+              setSelectedExemplars={setSelectedExemplars}
+            />
           ) : (
-            <div className="mt-4">
-              <BookItem
-                imageUrl={selectedBook.thumbnail_url}
-                title={selectedBook.titol || selectedBook.title}
-                author={selectedBook.autor || selectedBook.subTitle}
-                editorial={selectedBook.editorial}
-                isbn={selectedBook.ISBN}
-                country={selectedBook.pais}
-                pages={selectedBook.pagines}
-              />
-              {user?.groups?.includes("Bibliotecari", "Administrador")
-                ? selectedExemplars && (
-                    <ExemplarsTable array={selectedExemplars} />
-                  )
-                : null}
-            </div>
+            selectedBook && (
+              <div className="mt-4">
+                <BookItem
+                  imageUrl={selectedBook.thumbnail_url}
+                  title={selectedBook.titol || selectedBook.title}
+                  author={selectedBook.autor || selectedBook.subTitle}
+                  editorial={selectedBook.editorial}
+                  isbn={selectedBook.ISBN}
+                  country={selectedBook.pais}
+                  pages={selectedBook.pagines}
+                />
+                {user?.groups?.includes("Bibliotecari", "Administrador")
+                  ? selectedExemplars && (
+                      <ExemplarsTable array={selectedExemplars} />
+                    )
+                  : null}
+              </div>
+            )
           )}
         </div>
       </div>

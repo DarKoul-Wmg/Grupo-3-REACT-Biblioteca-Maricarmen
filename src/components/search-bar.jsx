@@ -63,9 +63,13 @@ export default function SearchBar({
   }, []);
 
   const handleBookClick = (book) => {
-    getBookById(book.id).then((value) => setSelectedExemplars(value.exemplars));
+    getBookById(book.id).then((value) => {
+      console.log("Setting book selected: ", value);
+      setSelectedExemplars(value.exemplars);
 
-    onBookSelect?.(book); // Pasar el objeto completo del libro seleccionado
+      onBookSelect?.(value);
+    });
+
     setIsOpen(false); // Cerrar el menú desplegable
     inputRef.current?.focus(); // Mantener el foco en el input
   };

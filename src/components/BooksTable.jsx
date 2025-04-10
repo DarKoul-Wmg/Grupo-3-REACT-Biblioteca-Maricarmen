@@ -1,6 +1,11 @@
 import { useState } from "react";
+import { getBookById } from "../services/api";
 
-export default function BooksTable({ array, onBookSelect }) {
+export default function BooksTable({
+  array,
+  onBookSelect,
+  setSelectedExemplars,
+}) {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
@@ -53,7 +58,13 @@ export default function BooksTable({ array, onBookSelect }) {
                     </td>
                     <td className="px-8 py-4 whitespace-nowrap text-sm text-left text-blue-600">
                       <button
-                        onClick={() => onBookSelect(book)}
+                        onClick={() => {
+                          getBookById(book.id).then((value) => {
+                            console.log("Setting book selected: ", value);
+                            setSelectedExemplars(value.exemplars);
+                            onBookSelect(value);
+                          });
+                        }}
                         className="hover:underline text-blue-600"
                       >
                         Veure llibre
