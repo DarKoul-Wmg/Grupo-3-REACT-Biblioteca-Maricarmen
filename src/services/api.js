@@ -3,7 +3,6 @@ const API_ROOT_PRODUCTION = "https://biblioteca3.ieti.site/api/";
 const API_URL = API_ROOT_LOCAL; // Ajusta según tu Django API (uso en local o producción)
 
 export const getBooks = () => {
-  console.log("llamando API...");
   return fetch(API_URL + "llibres")
     .then((response) => {
       if (!response.ok) {
@@ -20,31 +19,8 @@ export const getBooks = () => {
 /* Obtenemos el archivo CSV para ser exportado en la base de datos*/
 export const importCsv = async (file) => {
   console.log("Llamada a la API para importar CSV...");
-  /* Obtenemos el archivo CSV para ser exportado en la base de datos*/
-  export const importCsv = async (file) => {
-    console.log("Llamada a la API para importar CSV...");
-
-    const formData = new FormData();
-    formData.append("file", file);
-    const formData = new FormData();
-    formData.append("file", file);
-
-    try {
-      const response = await fetch(API_URL + "importcsv", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error("Error al importar el CSV");
-      }
-
-      return await response.json(); // Assuming the API returns JSON
-    } catch (error) {
-      console.error("Error en la API:", error);
-      throw error;
-    }
-  };
+  const formData = new FormData();
+  formData.append("file", file);
 
   try {
     const response = await fetch(API_URL + "importcsv", {

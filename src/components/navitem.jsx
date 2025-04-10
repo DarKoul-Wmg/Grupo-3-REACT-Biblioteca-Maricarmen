@@ -36,7 +36,7 @@ export function FileIcon() {
   );
 }
 
-export default function SidebarNavigation() {
+export default function SidebarNavigation({ onSidebarClick }) {
   const { setActiveComponent } = useContext(AuthContext);
 
   const items = [
@@ -60,7 +60,7 @@ export default function SidebarNavigation() {
             <li key={index} className="p-3">
               <button
                 onClick={() => {
-                  setActiveComponent(component);
+                  onSidebarClick(component);
                 }}
                 className="w-full flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 cursor-pointer"
               >

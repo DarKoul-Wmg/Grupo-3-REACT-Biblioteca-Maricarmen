@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function BooksTable({ array }) {
+export default function BooksTable({ array, onBookSelect }) {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
@@ -10,6 +10,7 @@ export default function BooksTable({ array }) {
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
+  //console.log("Current book data", currentData);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -17,7 +18,9 @@ export default function BooksTable({ array }) {
 
   return (
     <div className="flex flex-col w-full max-w-6xl mx-auto">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-4">Llistat de llibres</h2>
+      <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+        Llistat de llibres
+      </h2>
 
       <div className="-m-1.5 overflow-x-auto">
         <div className="p-1.5 min-w-full inline-block align-middle">
@@ -25,10 +28,15 @@ export default function BooksTable({ array }) {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-blue-500">
                 <tr>
-                  <th className="px-8 py-3 text-left text-xs font-semibold text-white uppercase">Títol</th>
-                  <th className="px-8 py-3 text-left text-xs font-semibold text-white uppercase">Autor</th>
-                  <th className="px-8 py-3 text-left text-xs font-semibold text-white uppercase">ISBN</th>
-                  <th className="px-8 py-3 text-left text-xs font-semibold text-white uppercase">Editorial</th>
+                  <th className="px-8 py-3 text-left text-xs font-semibold text-white uppercase">
+                    Títol
+                  </th>
+                  <th className="px-8 py-3 text-left text-xs font-semibold text-white uppercase">
+                    Autor
+                  </th>
+                  <th className="px-8 py-3 text-left text-xs font-semibold text-white uppercase">
+                    Enllaç
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 bg-white">
@@ -43,11 +51,13 @@ export default function BooksTable({ array }) {
                     <td className="px-8 py-4 whitespace-nowrap text-sm text-left text-gray-800">
                       {book.autor}
                     </td>
-                    <td className="px-8 py-4 whitespace-nowrap text-sm text-left text-gray-800">
-                      {book.ISBN}
-                    </td>
-                    <td className="px-8 py-4 whitespace-nowrap text-sm text-left text-gray-800">
-                      {book.editorial}
+                    <td className="px-8 py-4 whitespace-nowrap text-sm text-left text-blue-600">
+                      <button
+                        onClick={() => onBookSelect(book)}
+                        className="hover:underline text-blue-600"
+                      >
+                        Veure llibre
+                      </button>
                     </td>
                   </tr>
                 ))}
