@@ -51,6 +51,7 @@ export default function App() {
     setShowBookDetails(false);
     setShowBooksTable(false);
   };
+  //console.log("Selected book ", selectedBook);
 
   const renderActiveComponent = () => {
     if (activeSidebarComponent) {
@@ -79,7 +80,7 @@ export default function App() {
   };
 
   useEffect(() => {
-    if (user?.groups?.includes("Bibliotecari", "Administrador") && showLogin) {
+    if (user?.groups && showLogin) {
       setShowLogin(false);
     }
   }, [user, showLogin]);

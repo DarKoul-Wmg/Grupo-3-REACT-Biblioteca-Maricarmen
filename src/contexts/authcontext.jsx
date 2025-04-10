@@ -1,4 +1,5 @@
 import React, { createContext, useState } from "react";
+import { API_URL } from "../services/api";
 
 export const AuthContext = createContext({
   user: null, // Información del usuario logueado
@@ -15,8 +16,17 @@ export const AuthProvider = ({ children }) => {
   const [activeComponent, setActiveComponent] = useState("UserDetails");
 
   const login = (userData) => {
-    console.log("USER EN CONTEXT ", userData);
     setUser(userData);
+    if (userData?.groups?.includes("Administrador")) {
+      let adminUrl = API_URL;
+      if (API_URL.includes(":8000")) {
+        adminUrl = API_URL.slice(0, -4) + "/admin";
+      } else {
+        adminUrl = API_URL.replace("/api", "/admin");
+      }
+
+      window.location.href = adminUrl;
+    }
   };
 
   const logout = () => {

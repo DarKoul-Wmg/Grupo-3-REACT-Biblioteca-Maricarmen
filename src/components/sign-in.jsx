@@ -14,10 +14,9 @@ export default function SignIn() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    console.log("Handle login");
 
     if (!email || !password) {
-      setError("Please fill in all fields.");
+      setError("Si us plau, omple tots els camps.");
       return;
     }
 
@@ -26,14 +25,15 @@ export default function SignIn() {
 
       const userInfo = await getUserInfo(token);
       setUserToken(token);
-      console.log("Obtained user info: ", userInfo["user-details"]);
 
       login(userInfo["user-details"]);
 
       setError(null);
     } catch (err) {
-      console.error("Error al iniciar sesión:", err.message);
-      setError("Invalid email or password. Please try again.");
+      console.error("Error en iniciar sessió:", err.message);
+      setError(
+        "Correu electrònic o contrasenya invàlids. Torna-ho a intentar."
+      );
     }
   };
 
@@ -41,20 +41,22 @@ export default function SignIn() {
     <div className="flex w-full p-5 items-center flex-col gap-3">
       <Card className="w-2/4 max-w-[300px]">
         <form className="p-5 flex flex-col gap-3" onSubmit={handleLogin}>
-          <h1 className="w-full text-center font-bold text-lg">Sign In</h1>
+          <h1 className="w-full text-center font-bold text-lg">
+            Inicia Sessió
+          </h1>
 
           <div className="flex flex-col gap-3 mx-auto">
             <Input
-              label="Email"
+              label="Correu electrònic"
               id="login-mail"
               type="email"
-              placeholder="user@gmail.com"
+              placeholder="usuari@gmail.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
             <Input
-              label="Password"
+              label="Contrasenya"
               id="login-password"
               type="password"
               placeholder="********"
@@ -64,7 +66,7 @@ export default function SignIn() {
             />
             <div className="flex justify-end">
               <Button type="submit" className="w-2/4">
-                Sign In
+                Inicia Sessio
               </Button>
             </div>
           </div>
