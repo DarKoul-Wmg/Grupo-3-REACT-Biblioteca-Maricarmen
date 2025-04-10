@@ -1,7 +1,8 @@
-const API_URL = "http://localhost:8000/api/"; // Ajusta según tu Django API
+const API_ROOT_LOCAL = "http://localhost:8000/api/";
+const API_ROOT_PRODUCTION = "https://biblioteca3.ieti.site/api/";
+const API_URL = API_ROOT_LOCAL; // Ajusta según tu Django API (uso en local o producción)
 
 export const getBooks = () => {
-  console.log("llamando API...");
   return fetch(API_URL + "llibres")
     .then((response) => {
       if (!response.ok) {
@@ -18,7 +19,6 @@ export const getBooks = () => {
 /* Obtenemos el archivo CSV para ser exportado en la base de datos*/
 export const importCsv = async (file) => {
   console.log("Llamada a la API para importar CSV...");
-
   const formData = new FormData();
   formData.append("file", file);
 

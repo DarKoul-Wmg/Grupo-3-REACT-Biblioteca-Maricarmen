@@ -4,72 +4,127 @@ import SignIn from "./components/sign-in";
 import Header from "./components/header";
 import Footer from "./components/footer";
 import Sidebar from "./components/sidebar";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "./contexts/authcontext";
 import UserDetails from "./components/user-details";
-import SearchBar from "./components/search-bar";
 import BookItem from "./components/BookItem";
-import { getBookById } from "./services/api";
+import BooksTable from "./components/BooksTable";
+import InputCsv from "./components/InputCsv";
+import ExemplarsTable from "./components/ExemplarsTable";
 
 export default function App() {
   const { user, activeComponent } = useContext(AuthContext);
   const [selectedBook, setSelectedBook] = useState(null);
+  const [selectedExemplars, setSelectedExemplars] = useState(null);
   const [showBookDetails, setShowBookDetails] = useState(false);
+  const [searchResults, setSearchResults] = useState([]);
+  const [showBooksTable, setShowBooksTable] = useState(false);
+  const [showLogin, setShowLogin] = useState(true);
+  const [activeSidebarComponent, setActiveSidebarComponent] = useState(null); // Nuevo estado
 
-  const handleBookSelect = async (bookId) => {
-    console.log("Handling book selection for ID:", bookId);
-    try {
-      const book = await getBookById(bookId);
-      console.log("Book details fetched:", book);
-      setSelectedBook(book);
-      setShowBookDetails(true);
-    } catch (error) {
-      console.error("Error fetching book details:", error);
-    }
+  const handleBookSelect = (book) => {
+    setSelectedBook(book);
+    setShowBookDetails(true);
+    setShowBooksTable(false);
+    setShowLogin(false);
+    setActiveSidebarComponent(null); // Desactivar prioridad del Sidebar
+  };
+
+  const handleSearch = (results) => {
+    setSearchResults(results);
+    setShowBooksTable(true);
+    setShowBookDetails(false);
+    setShowLogin(false);
+    setActiveSidebarComponent(null); // Desactivar prioridad del Sidebar
+  };
+
+  const handleLoginClick = () => {
+    setShowLogin(true);
+    setShowBookDetails(false);
+    setShowBooksTable(false);
+    setActiveSidebarComponent(null); // Desactivar prioridad del Sidebar
+  };
+
+  const handleSidebarClick = (component) => {
+    setActiveSidebarComponent(component); // Activar prioridad del Sidebar
+    setShowLogin(false);
+    setShowBookDetails(false);
+    setShowBooksTable(false);
   };
 
   const renderActiveComponent = () => {
+    if (activeSidebarComponent) {
+      // Mostrar el componente seleccionado desde el Sidebar con prioridad
+      switch (activeSidebarComponent) {
+        case "UserDetails":
+          return <UserDetails />;
+        case "FileUpload":
+          return <InputCsv />;
+        default:
+          return null;
+      }
+    }
+
     if (user?.groups != null) {
       switch (activeComponent) {
         case "UserDetails":
           return <UserDetails />;
-        case "AnotherComponent":
-          return <p>Holaaa</p>;
+        case "FileUpload":
+          return <InputCsv />;
         default:
-          return div;
+          return <UserDetails />;
       }
     }
+    return null;
   };
+
+  useEffect(() => {
+    if (user?.groups?.includes("Bibliotecari", "Administrador") && showLogin) {
+      setShowLogin(false);
+    }
+  }, [user, showLogin]);
 
   return (
     <div className="h-screen w-screen bg-blue-100 flex flex-col">
-      <Header handleBookSelect={handleBookSelect} />
+      <Header
+        handleBookSelect={handleBookSelect}
+        onSearch={handleSearch}
+        onLoginClick={handleLoginClick}
+        setSelectedExemplars={setSelectedExemplars}
+      />
       <div className="flex flex-1 overflow-hidden">
-        {user?.groups.includes("Bibliotecari") && <Sidebar />}
-        <div className="flex flex-col justify-center items-center overflow-auto flex-1">
-          {user?.groups == null && !showBookDetails && <SignIn />}
+        {user?.groups?.includes("Bibliotecari", "Administrador") && (
+          <Sidebar onSidebarClick={handleSidebarClick} />
+        )}
 
-          <>
-            {!showBookDetails ? (
-              <>{renderActiveComponent()}</>
-            ) : (
-              <div className="mt-4">
-                <BookItem
-                  imageUrl={selectedBook.thumbnail_url}
-                  title={selectedBook.titol}
-                  author={selectedBook.autor}
-                  editorial={selectedBook.editorial}
-                  isbn={selectedBook.isbn}
-                  country={selectedBook.pais}
-                  pages={selectedBook.pagines}
-                />
-              </div>
-            )}
-          </>
+        <div className="flex flex-col justify-center items-center overflow-auto flex-1">
+          {showLogin ? (
+            <SignIn />
+          ) : !showBookDetails && !showBooksTable ? (
+            <>{renderActiveComponent()}</>
+          ) : showBooksTable ? (
+            <BooksTable array={searchResults} onBookSelect={handleBookSelect} />
+          ) : (
+            <div className="mt-4">
+              <BookItem
+                imageUrl={selectedBook.thumbnail_url}
+                title={selectedBook.titol || selectedBook.title}
+                author={selectedBook.autor || selectedBook.subTitle}
+                editorial={selectedBook.editorial}
+                isbn={selectedBook.ISBN}
+                country={selectedBook.pais}
+                pages={selectedBook.pagines}
+              />
+              {user?.groups?.includes("Bibliotecari", "Administrador")
+                ? selectedExemplars && (
+                    <ExemplarsTable array={selectedExemplars} />
+                  )
+                : null}
+            </div>
+          )}
         </div>
       </div>
       <Footer />
     </div>
   );
 }
-

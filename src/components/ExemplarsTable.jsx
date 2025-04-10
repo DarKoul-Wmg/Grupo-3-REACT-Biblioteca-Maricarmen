@@ -28,10 +28,18 @@ export default function ExemplarsTable({ array }) {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-blue-500">
                 <tr>
-                  <th className="px-8 py-3 text-start text-xs font-semibold text-white uppercase">Registre</th>
-                  <th className="px-8 py-3 text-start text-xs font-semibold text-white uppercase">Exclos Préstec</th>
-                  <th className="px-8 py-3 text-start text-xs font-semibold text-white uppercase">Baixa</th>
-                  <th className="px-8 py-3 text-start text-xs font-semibold text-white uppercase">Centre</th>
+                  <th className="px-8 py-3 text-start text-xs font-semibold text-white uppercase">
+                    Registre
+                  </th>
+                  <th className="px-8 py-3 text-start text-xs font-semibold text-white uppercase">
+                    Exclos Préstec
+                  </th>
+                  <th className="px-8 py-3 text-start text-xs font-semibold text-white uppercase">
+                    Baixa
+                  </th>
+                  <th className="px-8 py-3 text-start text-xs font-semibold text-white uppercase">
+                    Centre
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 bg-white">
@@ -44,12 +52,12 @@ export default function ExemplarsTable({ array }) {
                       {item.registre}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 text-center">
-                    <input
-                      type="checkbox"
-                      checked={item.exclos_prestec}
-                      disabled
-                      className="w-5 h-5 accent-blue-600"
-                    />
+                      <input
+                        type="checkbox"
+                        checked={item.exclos_prestec}
+                        disabled
+                        className="w-5 h-5 accent-blue-600"
+                      />
                     </td>
                     <td className="px-8 py-4 whitespace-nowrap text-sm text-gray-800">
                       {item.baixa ? "Sí" : "No"}
@@ -135,7 +143,6 @@ export default function ExemplarsTable({ array }) {
           </button>
         </div>
       )}
-
     </div>
   );
 }

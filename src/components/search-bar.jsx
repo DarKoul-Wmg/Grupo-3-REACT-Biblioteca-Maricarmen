@@ -1,134 +1,124 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Button from "./ui/button";
 import { getBooks } from "../services/api";
+import { getBookById } from "../services/api";
 
 export default function SearchBar({
   placeholder = "Search a Book",
   className = "text-black",
   onBookSelect,
+  onSearch,
+  setSelectedExemplars,
   ...props
 }) {
-  const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchItems, setSearchItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const inputRef = useRef(null);
 
   useEffect(() => {
-    if (searchQuery.length >= 3) {
-      const fetchBooks = async () => {
-        try {
-          const books = await getBooks(searchQuery);
-          console.log("Backend response:", books);
-
-          const formattedBooks = books.slice(0, 5).map((book) => ({
-            id: book.id,
-            title: book.titol,
-            link: `/libro/${book.id}`,
-            subTitle: book.autor,
-          }));
-          console.log("FORMATTED BOOKS", formattedBooks);
-
-          setSearchItems(formattedBooks);
-          setFilteredItems(formattedBooks);
-          setIsOpen(true);
-        } catch (error) {
-          console.error("Error fetching books:", error);
-        }
-      };
-
-      fetchBooks();
-    } else {
+    if (searchQuery.length < 3) {
+      setFilteredItems([]);
       setIsOpen(false);
+      return;
     }
+
+    let active = true;
+    setIsLoading(true);
+
+    getBooks(searchQuery).then((books) => {
+      if (!active) return;
+
+      const items = books.slice(0, 5); // Obtener los primeros 5 libros
+
+      setFilteredItems(items);
+      setIsOpen(true);
+      setIsLoading(false);
+
+      // Mantener el foco tras actualizar
+      requestAnimationFrame(() => {
+        inputRef.current?.focus();
+      });
+    });
+
+    return () => {
+      active = false;
+    };
   }, [searchQuery]);
 
-  const handleChange = (e) => {
-    setSearchQuery(e.target.value);
+  useEffect(() => {
+    const closeOnClickOutside = (e) => {
+      if (!e.target.closest(".search-bar-container")) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", closeOnClickOutside);
+    return () => document.removeEventListener("mousedown", closeOnClickOutside);
+  }, []);
+
+  const handleBookClick = (book) => {
+    getBookById(book.id).then((value) => setSelectedExemplars(value.exemplars));
+
+    onBookSelect?.(book); // Pasar el objeto completo del libro seleccionado
+    setIsOpen(false); // Cerrar el menú desplegable
+    inputRef.current?.focus(); // Mantener el foco en el input
   };
 
-  const handleSubmit = (e) => {
+  const handleSearch = (e) => {
     e.preventDefault();
-    if (searchQuery.length < 3) {
-      console.log("Search query too short, redirecting to results page...");
-    }
-  };
-
-  const handleBookClick = (bookId) => {
-    console.log("Book clicked with ID:", bookId);
-
-    console.log("Props in SearchBar:", { onBookSelect });
-
-    if (onBookSelect) {
-      console.log("onBookSelect is defined, calling it with bookId:", bookId);
-      onBookSelect(bookId);
-    }
+    onSearch?.(filteredItems); // Pasar los resultados de búsqueda al componente padre
   };
 
   return (
     <form
-      onSubmit={handleSubmit}
-      className={`flex items-center gap-3 ${className}`}
+      className={`search-bar-container flex items-center gap-3 ${className}`}
+      onSubmit={handleSearch}
       {...props}
     >
-      <div className="relative">
-        <div className="relative">
-          <div className="absolute inset-y-0 start-0 flex items-center pointer-events-none z-20 ps-3.5">
-            <svg
-              className="shrink-0 size-4 text-gray-400"
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="11" cy="11" r="8" />
-              <path d="m21 21-4.3-4.3" />
-            </svg>
-          </div>
-          <input
-            type="text"
-            role="combobox"
-            aria-expanded={isOpen ? "true" : "false"}
-            placeholder={placeholder}
-            value={searchQuery}
-            onChange={handleChange}
-            className="py-2.5 sm:py-3 ps-10 pe-4 block w-full border border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
-          />
+      <div className="relative w-full">
+        <input
+          ref={inputRef}
+          type="text"
+          placeholder={placeholder}
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="py-2.5 sm:py-3 ps-10 pe-4 w-full border border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500"
+          autoComplete="off"
+          spellCheck="false"
+        />
+        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+          🔍
         </div>
-
-        {isOpen && searchQuery.length >= 3 && (
-          <div className="absolute z-50 w-full bg-white rounded-xl shadow-xl">
-            <div className="max-h-125 p-2 overflow-y-auto overflow-hidden [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300">
-              {filteredItems.length > 0 ? (
-                filteredItems.map((item) => (
-                  <div key={item.id}>
-                    <button
-                      className="py-2 px-3 flex items-center gap-x-3 hover:bg-gray-100 rounded-lg w-full text-left"
-                      onClick={() => handleBookClick(item.id)}
-                    >
-                      <span className="text-sm text-gray-800">
-                        {item.title}
-                      </span>
-                      {item.subTitle && (
-                        <span className="ms-auto text-xs text-gray-400">
-                          {item.subTitle}
-                        </span>
-                      )}
-                    </button>
-                  </div>
-                ))
-              ) : (
-                <div className="py-2 px-3 text-gray-500">No results found</div>
-              )}
-            </div>
+        {isLoading && (
+          <div className="absolute right-3 top-1/2 -translate-y-1/2">
+            <div className="animate-spin h-4 w-4 border-2 border-blue-500 rounded-full border-t-transparent"></div>
+          </div>
+        )}
+        {isOpen && filteredItems.length > 0 && (
+          <div className="absolute z-50 w-full bg-white mt-1 rounded-xl shadow-xl">
+            {filteredItems.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => handleBookClick(item)}
+                className="w-full text-left px-4 py-2 hover:bg-gray-100 flex justify-between"
+              >
+                <span>{item.titol}</span>
+                {item.autor && (
+                  <span className="text-xs text-gray-500">{item.autor}</span>
+                )}
+              </button>
+            ))}
           </div>
         )}
       </div>
-      <Button type="submit" className="text-sm">
+      <Button
+        type="submit"
+        className="text-sm"
+        onMouseDown={(e) => e.preventDefault()}
+      >
         Search
       </Button>
     </form>
