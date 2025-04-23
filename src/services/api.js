@@ -22,7 +22,7 @@ export const importCsv = async (file) => {
   formData.append("file", file);
 
   try {
-    const response = await fetch(API_URL + "importcsv", {
+    const response = await fetch(API_URL + "import-users", {
       method: "POST",
       body: formData,
     });

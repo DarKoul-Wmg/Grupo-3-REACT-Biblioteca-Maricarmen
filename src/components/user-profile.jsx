@@ -9,8 +9,8 @@ export default function UserProfile({
   role,
 }) {
   return (
-    <div className="flex items-center gap-4 mb-6">
-      <div className="w-40 h-40 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
+    <div className="flex flex-col items-center gap-4 mb-6 p-5">
+      <div className="w-40 h-40 rounded-full bg-gray-100 flex flex-col items-center justify-center overflow-hidden">
         {image ? (
           <img
             src={image}

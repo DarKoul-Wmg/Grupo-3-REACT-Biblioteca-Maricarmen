@@ -24,6 +24,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
+
   // Función para obtener la información del usuario
   const fetchUserInfo = async (token) => {
     try {

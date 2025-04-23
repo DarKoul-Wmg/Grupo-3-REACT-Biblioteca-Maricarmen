@@ -28,6 +28,7 @@ export default function App() {
     getBookById(book.id).then((value) => {
       setSelectedExemplars(value.exemplars);
     });
+
     setSelectedBook(book);
     setShowBookDetails(true);
     setShowBooksTable(false);
@@ -165,6 +166,7 @@ export default function App() {
             )
           ) : (
             renderBookDetails()
+
           )}
         </div>
       </div>
