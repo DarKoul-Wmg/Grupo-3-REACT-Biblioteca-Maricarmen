@@ -40,12 +40,12 @@ export default function SidebarNavigation({ onSidebarClick }) {
   const items = [
     {
       icon: <UserIcon />,
-      label: "Edit User Details",
+      label: "Editar Usuari",
       component: "UserDetails",
     },
     {
       icon: <FileIcon />,
-      label: "Update Database",
+      label: "Importar CSV",
       component: "FileUpload",
     },
   ];

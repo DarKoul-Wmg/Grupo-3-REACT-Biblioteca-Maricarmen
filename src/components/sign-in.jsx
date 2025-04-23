@@ -14,38 +14,22 @@ export default function SignIn() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
-    if (!email || !password) {
-      setError("Si us plau, omple tots els camps.");
-      return;
-    }
-
     try {
-      const token = await logIn(email, password);
-
-      const userInfo = await getUserInfo(token);
-      setUserToken(token);
-
-      login(userInfo["user-details"]);
-
-      setError(null);
+      const token = await logIn(username, password); // Llamar a la API para obtener el token
+      login(token); // Usar el contexto para iniciar sesión
     } catch (err) {
-      console.error("Error en iniciar sessió:", err.message);
-      setError(
-        "Correu electrònic o contrasenya invàlids. Torna-ho a intentar."
-      );
+      setError("Credenciales inválidas");
     }
   };
-
   return (
-    <div className="flex w-full p-5 items-center flex-col gap-3">
-      <Card className="w-2/4 max-w-[300px]">
-        <form className="p-5 flex flex-col gap-3" onSubmit={handleLogin}>
-          <h1 className="w-full text-center font-bold text-lg">
+    <div className="flex w-full h-full items-center justify-center flex-col gap-6 p-4">
+      <Card className="w-full max-w-md">
+        <form className="p-6 flex flex-col gap-4" onSubmit={handleLogin}>
+          <h1 className="w-full text-center font-bold text-xl">
             Inicia Sessió
           </h1>
 
-          <div className="flex flex-col gap-3 mx-auto">
+          <div className="flex flex-col gap-4">
             <Input
               label="Correu electrònic"
               id="login-mail"
@@ -65,7 +49,7 @@ export default function SignIn() {
               required
             />
             <div className="flex justify-end">
-              <Button type="submit" className="w-2/4">
+              <Button type="submit" className="w-full sm:w-2/4">
                 Inicia Sessio
               </Button>
             </div>
