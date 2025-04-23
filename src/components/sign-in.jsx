@@ -3,24 +3,29 @@ import Card from "./ui/card";
 import Button from "./ui/button";
 import { useContext, useState } from "react";
 import { logIn } from "../services/api";
-import { getUserInfo } from "../services/api";
 import { AuthContext } from "../contexts/authcontext";
+
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const { login, setUserToken } = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const token = await logIn(username, password); // Llamar a la API para obtener el token
-      login(token); // Usar el contexto para iniciar sesión
+      // Llamar a la API para obtener el token
+      const token = await logIn(email, password);
+
+      // Usar el contexto para iniciar sesión
+      login(token);
     } catch (err) {
+      console.error("Login failed:", err.message);
       setError("Credenciales inválidas");
     }
   };
+
   return (
     <div className="flex w-full h-full items-center justify-center flex-col gap-6 p-4">
       <Card className="w-full max-w-md">
@@ -50,7 +55,7 @@ export default function SignIn() {
             />
             <div className="flex justify-end">
               <Button type="submit" className="w-full sm:w-2/4">
-                Inicia Sessio
+                Inicia Sessió
               </Button>
             </div>
           </div>

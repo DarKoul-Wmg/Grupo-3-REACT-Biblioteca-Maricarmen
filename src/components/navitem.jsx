@@ -1,6 +1,6 @@
 import React from "react";
-import { AuthContext } from "../contexts/authcontext";
 import { useContext } from "react";
+import { AuthContext } from "../contexts/authcontext";
 
 export function UserIcon() {
   return (
@@ -37,24 +37,42 @@ export function FileIcon() {
 }
 
 export default function SidebarNavigation({ onSidebarClick }) {
+  const { user } = useContext(AuthContext);
+
+  // Definir los elementos del menú
   const items = [
     {
       icon: <UserIcon />,
       label: "Editar Usuari",
       component: "UserDetails",
+      roles: ["Bibliotecari", "Administrador"],
     },
     {
       icon: <FileIcon />,
       label: "Importar CSV",
       component: "FileUpload",
+      roles: ["Bibliotecari", "Administrador"],
+    },
+    {
+      icon: <FileIcon />,
+      label: "Els meus préstecs",
+      component: "MyLoans",
+      roles: ["Usuari", "Bibliotecari", "Administrador"],
     },
   ];
+
+  // Filtrar los elementos según los roles del usuario
+  const visibleItems = items.filter(
+    (item) =>
+      !item.roles || // Si no hay roles definidos, es visible para todos
+      item.roles.some((role) => user?.groups?.includes(role))
+  );
 
   return (
     <nav className="h-full overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100">
       <div className="pb-0 px-2 w-full flex flex-col flex-wrap">
         <ul className="space-y-1">
-          {items.map(({ icon, label, component }, index) => (
+          {visibleItems.map(({ icon, label, component }, index) => (
             <li key={index} className="p-3">
               <button
                 onClick={() => {

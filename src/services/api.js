@@ -18,7 +18,6 @@ export const getBooks = () => {
 
 /* Obtenemos el archivo CSV para ser exportado en la base de datos*/
 export const importCsv = async (file) => {
-  //console.log("Llamada a la API para importar CSV...");
   const formData = new FormData();
   formData.append("file", file);
 
@@ -39,18 +38,19 @@ export const importCsv = async (file) => {
   }
 };
 
-export const getBookById = (id) => {
-  return fetch(`${API_URL}llibres/${id}`)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Error al obtener la información del libro");
-      }
-      return response.json();
-    })
-    .catch((error) => {
-      console.error("Error en la API:", error);
-      return null;
-    });
+export const getBookById = async (id) => {
+  try {
+    const response = await fetch(`${API_URL}llibres/${id}`);
+    if (!response.ok) {
+      throw new Error("Error al obtener la información del libro");
+    }
+    const data = await response.json();
+
+    return data; // Retorna los resultados de la búsqueda
+  } catch (error) {
+    console.error("Error en la API:", error);
+    return null;
+  }
 };
 
 export async function logIn(username, password) {
@@ -65,8 +65,6 @@ export async function logIn(username, password) {
         Authorization: `Basic ${credentials}`, // Enviar las credenciales en el encabezado
       },
     });
-
-    console.log("response login: ", response);
 
     if (!response.ok) {
       throw new Error("Invalid credentials");
@@ -98,7 +96,6 @@ export async function getUserInfo(token) {
     }
 
     const data = await response.json();
-    //console.log("User info:", data["user-details"]); // Debugging
     return data;
   } catch (err) {
     console.error("Error fetching user info:", err.message);

@@ -29,7 +29,7 @@ export default function SearchBar({
       searchBook(searchQuery).then((books) => {
         if (!active) return;
 
-        const items = books.length > 0 ? books.slice(0, 5) : []; // Obtener los primeros 5 libros o vacío si no hay resultados
+        const items = books.results.length > 0 ? books.results.slice(0, 5) : []; // Obtener los primeros 5 libros o vacío si no hay resultados
 
         setFilteredItems(items);
         setIsOpen(true);
@@ -57,8 +57,9 @@ export default function SearchBar({
     getBookById(book.id).then((value) => {
       setSelectedExemplars(value.exemplars);
 
-    onBookSelect?.(book); // Pasar el objeto completo del libro seleccionado
-    setIsOpen(false); // Cerrar el menú desplegable
+      onBookSelect?.(value);
+      setIsOpen(false);
+    });
   };
 
   const handleSearch = (e) => {
@@ -114,7 +115,7 @@ export default function SearchBar({
                   type="button"
                   onMouseDown={(e) => e.preventDefault()}
                   onClick={() => handleBookClick(item)}
-                  className="w-full text-left px-4 py-2 hover:bg-gray-100 flex justify-between"
+                  className="w-full text-left px-4 py-2 hover:bg-gray-100 flex justify-between items-center cursor-pointer"
                 >
                   <span>
                     {item.titol

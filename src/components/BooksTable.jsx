@@ -10,7 +10,6 @@ export default function BooksTable({ array, onBookSelect }) {
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
-  //console.log("Current book data", currentData);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
