@@ -147,7 +147,7 @@ export default function App() {
         setSelectedExemplars={setSelectedExemplars}
       />
       <div className="flex w-screen h-full items-center">
-        <Sidebar user={user} onSidebarClick={handleSidebarClick} />
+        {user && <Sidebar user={user} onSidebarClick={handleSidebarClick} />}
 
         <div className="w-full">
           {showLogin ? (
@@ -166,7 +166,6 @@ export default function App() {
             )
           ) : (
             renderBookDetails()
-
           )}
         </div>
       </div>
