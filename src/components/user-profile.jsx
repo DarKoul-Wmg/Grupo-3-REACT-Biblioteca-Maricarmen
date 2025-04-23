@@ -28,15 +28,11 @@ export default function UserProfile({
         )}
       </div>
       <div className="flex flex-col items-start">
-        <div className="flex items-center">
+        <div className="flex items-center gap-3">
           <h1 className="text-3xl truncate max-w-65">
             {firstName} {lastName}
           </h1>
-          {role.map((singleRole, index) => (
-            <Badge key={index} className="custom-class">
-              {singleRole}
-            </Badge>
-          ))}
+          <Badge role={role[0]} className="custom-class" />
         </div>
         <h2 className="text-sm text-gray-500">{school}</h2>
       </div>

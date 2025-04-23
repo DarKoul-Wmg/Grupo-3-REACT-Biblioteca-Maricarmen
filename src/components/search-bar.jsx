@@ -1,10 +1,9 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useTransition } from "react";
 import Button from "./ui/button";
-import { getBooks } from "../services/api";
-import { getBookById } from "../services/api";
+import { getBooks, getBookById, searchBook } from "../services/api";
 
 export default function SearchBar({
-  placeholder = "Search a Book",
+  placeholder = "Busca un llibre / autor",
   className = "text-black",
   onBookSelect,
   onSearch,
@@ -14,7 +13,7 @@ export default function SearchBar({
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredItems, setFilteredItems] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useTransition(false);
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -26,28 +25,20 @@ export default function SearchBar({
       }
 
       let active = true;
-      setIsLoading(true);
 
-      getBooks(searchQuery).then((books) => {
-        //console.log("books ", books);
+      searchBook(searchQuery).then((books) => {
         if (!active) return;
 
-        const items = books.slice(0, 5); // Obtener los primeros 5 libros
+        const items = books.results.length > 0 ? books.results.slice(0, 5) : []; // Obtener los primeros 5 libros o vacío si no hay resultados
 
         setFilteredItems(items);
         setIsOpen(true);
-        setIsLoading(false);
-
-        // Mantener el foco tras actualizar
-        requestAnimationFrame(() => {
-          inputRef.current?.focus();
-        });
       });
 
       return () => {
         active = false;
       };
-    }, 1000); // 300ms debounce delay
+    }, 300);
 
     return () => clearTimeout(debounceTimeout);
   }, [searchQuery]);
@@ -64,24 +55,40 @@ export default function SearchBar({
 
   const handleBookClick = (book) => {
     getBookById(book.id).then((value) => {
-      console.log("Setting book selected: ", value);
       setSelectedExemplars(value.exemplars);
 
       onBookSelect?.(value);
+      setIsOpen(false);
     });
-
-    setIsOpen(false); // Cerrar el menú desplegable
-    inputRef.current?.focus(); // Mantener el foco en el input
   };
 
   const handleSearch = (e) => {
     e.preventDefault();
-    onSearch?.(filteredItems); // Pasar los resultados de búsqueda al componente padre
+
+    setIsLoading(() => {
+      if (searchQuery != "") {
+        searchBook(searchQuery).then((books) => {
+          if (books) {
+            onSearch?.(books);
+          } else {
+            console.error("No books found");
+          }
+        });
+      } else {
+        getBooks().then((books) => {
+          if (books) {
+            onSearch?.(books);
+          } else {
+            console.error("No books found");
+          }
+        });
+      }
+    });
   };
 
   return (
     <form
-      className={`search-bar-container flex items-center gap-3 ${className}`}
+      className={`w-[50%] search-bar-container flex items-center gap-3 pr-[3%] ${className}`}
       onSubmit={handleSearch}
       {...props}
     >
@@ -99,27 +106,48 @@ export default function SearchBar({
         <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
           🔍
         </div>
-        {isLoading && (
-          <div className="absolute right-3 top-1/2 -translate-y-1/2">
-            <div className="animate-spin h-4 w-4 border-2 border-blue-500 rounded-full border-t-transparent"></div>
-          </div>
-        )}
-        {isOpen && filteredItems.length > 0 && (
+        {isOpen && (
           <div className="absolute z-50 w-full bg-white mt-1 rounded-xl shadow-xl">
-            {filteredItems.map((item) => (
-              <button
-                key={item.id}
-                type="button"
-                onMouseDown={(e) => e.preventDefault()}
-                onClick={() => handleBookClick(item)}
-                className="w-full text-left px-4 py-2 hover:bg-gray-100 flex justify-between"
-              >
-                <span>{item.titol}</span>
-                {item.autor && (
-                  <span className="text-xs text-gray-500">{item.autor}</span>
-                )}
-              </button>
-            ))}
+            {filteredItems.length > 0 ? (
+              filteredItems.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={() => handleBookClick(item)}
+                  className="w-full text-left px-4 py-2 hover:bg-gray-100 flex justify-between items-center cursor-pointer"
+                >
+                  <span>
+                    {item.titol
+                      .split(new RegExp(`(${searchQuery})`, "gi"))
+                      .map((part, index) =>
+                        part.toLowerCase() === searchQuery.toLowerCase() ? (
+                          <b key={index}>{part}</b>
+                        ) : (
+                          part
+                        )
+                      )}
+                  </span>
+                  {item.autor && (
+                    <span className="text-xs text-gray-500">
+                      {item.autor
+                        .split(new RegExp(`(${searchQuery})`, "gi"))
+                        .map((part, index) =>
+                          part.toLowerCase() === searchQuery.toLowerCase() ? (
+                            <b key={index}>{part}</b>
+                          ) : (
+                            part
+                          )
+                        )}
+                    </span>
+                  )}
+                </button>
+              ))
+            ) : (
+              <div className="w-full text-left px-4 py-2 text-gray-500">
+                No s'han trobat llibres / autors
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -127,8 +155,9 @@ export default function SearchBar({
         type="submit"
         className="text-sm"
         onMouseDown={(e) => e.preventDefault()}
+        loading={isLoading}
       >
-        Search
+        Busca
       </Button>
     </form>
   );

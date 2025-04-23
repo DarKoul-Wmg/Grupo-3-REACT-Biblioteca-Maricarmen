@@ -31,7 +31,7 @@ export default function UserForm() {
   };
 
   return (
-    <div className="flex content-evenly gap-1">
+    <div className="flex gap-1 w-full items-center justify-center">
       <UserProfile
         firstName={user?.first_name || "Nom"}
         lastName={user?.last_name || "Cognom"}
@@ -39,7 +39,7 @@ export default function UserForm() {
         image={user?.imatge || null}
         role={user?.groups || ["usuari"]}
       />
-      <div className="bg-gray-50 border border-gray-200 rounded-xl shadow-sm">
+      <div className="bg-gray-50 border border-gray-200 rounded-xl shadow-sm w-2/4">
         <div className=" py-2 border-b border-gray-200">
           <h3 className="text-gray-800 font-semibold">
             Edita la informació de l'usuari

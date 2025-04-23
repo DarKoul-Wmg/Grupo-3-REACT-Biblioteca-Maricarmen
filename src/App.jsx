@@ -6,33 +6,38 @@ import Footer from "./components/footer";
 import Sidebar from "./components/sidebar";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "./contexts/authcontext";
-import UserDetails from "./components/user-details";
 import BookItem from "./components/BookItem";
 import BooksTable from "./components/BooksTable";
 import InputCsv from "./components/InputCsv";
 import ExemplarsTable from "./components/ExemplarsTable";
+import UserForm from "./components/user-form";
+import { getBookById } from "./services/api";
 
 export default function App() {
-  const { user, activeComponent } = useContext(AuthContext);
+  const { user, activeComponent, login } = useContext(AuthContext);
   const [selectedBook, setSelectedBook] = useState(null);
   const [selectedExemplars, setSelectedExemplars] = useState(null);
   const [showBookDetails, setShowBookDetails] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
   const [showBooksTable, setShowBooksTable] = useState(false);
   const [showLogin, setShowLogin] = useState(true);
-  const [activeSidebarComponent, setActiveSidebarComponent] = useState(null); // Nuevo estado
+  const [activeSidebarComponent, setActiveSidebarComponent] = useState(null);
 
   const handleBookSelect = (book) => {
-    console.log("BOOK OBTENIDO!", book);
+    console.log("Selected book: ", selectedBook);
+    getBookById(book.id).then((value) => {
+      setSelectedExemplars(value.exemplars);
+    });
+
     setSelectedBook(book);
     setShowBookDetails(true);
     setShowBooksTable(false);
     setShowLogin(false);
-    setActiveSidebarComponent(null); // Desactivar prioridad del Sidebar
+    setActiveSidebarComponent("BookDetails"); // Activar BookDetails en el Sidebar
   };
 
-  const handleSearch = (results) => {
-    setSearchResults(results);
+  const handleSearch = (search) => {
+    setSearchResults(search.results);
     setShowBooksTable(true);
     setShowBookDetails(false);
     setShowLogin(false);
@@ -40,6 +45,7 @@ export default function App() {
   };
 
   const handleLoginClick = () => {
+    login();
     setShowLogin(true);
     setShowBookDetails(false);
     setShowBooksTable(false);
@@ -51,17 +57,63 @@ export default function App() {
     setShowLogin(false);
     setShowBookDetails(false);
     setShowBooksTable(false);
+
+    if (component === "BookDetails" && selectedBook) {
+      setShowBookDetails(true);
+    }
   };
-  //console.log("Selected book ", selectedBook);
+
+  const renderBookDetails = () => {
+    if (!selectedBook) return null;
+
+    return (
+      <div className="mt-4 items-center flex flex-col gap-3">
+        <BookItem
+          imageUrl={selectedBook.thumbnail_url}
+          title={selectedBook.titol || selectedBook.title}
+          originalTitle={selectedBook.originalTitle}
+          author={selectedBook.autor || selectedBook.subTitle}
+          isbn={selectedBook.ISBN}
+          country={selectedBook.pais}
+          pages={selectedBook.pagines}
+          editorial={selectedBook.editorial}
+          cdu={selectedBook.cdu}
+          signatura={selectedBook.signatura}
+          dataEdicio={selectedBook.dataEdicio}
+          resum={selectedBook.description}
+          anotacions={selectedBook.anotacions}
+          mides={selectedBook.mides}
+        />
+        {selectedExemplars && (
+          <ExemplarsTable
+            array={selectedExemplars}
+            user={user}
+            onLoanClick={(item) => {
+              console.log("Fer Préstec clicked for:", item);
+              // Add modal for loan spec 15
+            }}
+          />
+        )}
+      </div>
+    );
+  };
 
   const renderActiveComponent = () => {
     if (activeSidebarComponent) {
       // Mostrar el componente seleccionado desde el Sidebar con prioridad
       switch (activeSidebarComponent) {
         case "UserDetails":
-          return <UserDetails />;
+          return <UserForm />;
         case "FileUpload":
           return <InputCsv />;
+        case "MyLoans":
+          return (
+            <h1 className="text-2xl font-bold text-center">
+              Els meus préstecs
+            </h1>
+          );
+        case "BookDetails":
+          return renderBookDetails();
         default:
           return null;
       }
@@ -70,11 +122,11 @@ export default function App() {
     if (user?.groups != null) {
       switch (activeComponent) {
         case "UserDetails":
-          return <UserDetails />;
+          return <UserForm />;
         case "FileUpload":
           return <InputCsv />;
         default:
-          return <UserDetails />;
+          return <UserForm />;
       }
     }
     return null;
@@ -94,41 +146,27 @@ export default function App() {
         onLoginClick={handleLoginClick}
         setSelectedExemplars={setSelectedExemplars}
       />
-      <div className="flex flex-1 overflow-hidden">
-        {user?.groups?.includes("Bibliotecari", "Administrador") && (
-          <Sidebar onSidebarClick={handleSidebarClick} />
-        )}
+      <div className="flex w-screen h-full items-center">
+        <Sidebar user={user} onSidebarClick={handleSidebarClick} />
 
-        <div className="flex flex-col justify-center items-center overflow-auto flex-1">
+        <div className="w-full">
           {showLogin ? (
             <SignIn />
           ) : !showBookDetails && !showBooksTable ? (
             <>{renderActiveComponent()}</>
           ) : showBooksTable ? (
-            <BooksTable
-              array={searchResults}
-              onBookSelect={handleBookSelect}
-              setSelectedExemplars={setSelectedExemplars}
-            />
-          ) : (
-            selectedBook && (
-              <div className="mt-4">
-                <BookItem
-                  imageUrl={selectedBook.thumbnail_url}
-                  title={selectedBook.titol || selectedBook.title}
-                  author={selectedBook.autor || selectedBook.subTitle}
-                  editorial={selectedBook.editorial}
-                  isbn={selectedBook.ISBN}
-                  country={selectedBook.pais}
-                  pages={selectedBook.pagines}
-                />
-                {user?.groups?.includes("Bibliotecari", "Administrador")
-                  ? selectedExemplars && (
-                      <ExemplarsTable array={selectedExemplars} />
-                    )
-                  : null}
-              </div>
+            searchResults && searchResults.length > 0 ? (
+              <BooksTable
+                array={searchResults}
+                onBookSelect={handleBookSelect}
+                setSelectedExemplars={setSelectedExemplars}
+              />
+            ) : (
+              <h1>No s'han trobat llibres/autors</h1>
             )
+          ) : (
+            renderBookDetails()
+
           )}
         </div>
       </div>
