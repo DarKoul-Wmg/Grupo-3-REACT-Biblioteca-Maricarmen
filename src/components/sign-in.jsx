@@ -3,49 +3,38 @@ import Card from "./ui/card";
 import Button from "./ui/button";
 import { useContext, useState } from "react";
 import { logIn } from "../services/api";
-import { getUserInfo } from "../services/api";
 import { AuthContext } from "../contexts/authcontext";
+
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const { login, setUserToken } = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
-    if (!email || !password) {
-      setError("Si us plau, omple tots els camps.");
-      return;
-    }
-
     try {
+      // Llamar a la API para obtener el token
       const token = await logIn(email, password);
 
-      const userInfo = await getUserInfo(token);
-      setUserToken(token);
-
-      login(userInfo["user-details"]);
-
-      setError(null);
+      // Usar el contexto para iniciar sesión
+      login(token);
     } catch (err) {
-      console.error("Error en iniciar sessió:", err.message);
-      setError(
-        "Correu electrònic o contrasenya invàlids. Torna-ho a intentar."
-      );
+      console.error("Login failed:", err.message);
+      setError("Credenciales inválidas");
     }
   };
 
   return (
-    <div className="flex w-full p-5 items-center flex-col gap-3">
-      <Card className="w-2/4 max-w-[300px]">
-        <form className="p-5 flex flex-col gap-3" onSubmit={handleLogin}>
-          <h1 className="w-full text-center font-bold text-lg">
+    <div className="flex w-full h-full items-center justify-center flex-col gap-6 p-4">
+      <Card className="w-full max-w-md">
+        <form className="p-6 flex flex-col gap-4" onSubmit={handleLogin}>
+          <h1 className="w-full text-center font-bold text-xl">
             Inicia Sessió
           </h1>
 
-          <div className="flex flex-col gap-3 mx-auto">
+          <div className="flex flex-col gap-4">
             <Input
               label="Correu electrònic"
               id="login-mail"
@@ -65,8 +54,8 @@ export default function SignIn() {
               required
             />
             <div className="flex justify-end">
-              <Button type="submit" className="w-2/4">
-                Inicia Sessio
+              <Button type="submit" className="w-full sm:w-2/4">
+                Inicia Sessió
               </Button>
             </div>
           </div>

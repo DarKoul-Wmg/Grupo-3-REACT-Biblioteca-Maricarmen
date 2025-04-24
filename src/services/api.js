@@ -18,7 +18,6 @@ export const getBooks = () => {
 
 /* Obtenemos el archivo CSV para ser exportado en la base de datos*/
 export const importCsv = async (file) => {
-  //console.log("Llamada a la API para importar CSV...");
   const formData = new FormData();
   formData.append("file", file);
 
@@ -39,18 +38,19 @@ export const importCsv = async (file) => {
   }
 };
 
-export const getBookById = (id) => {
-  return fetch(`${API_URL}llibres/${id}`)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Error al obtener la información del libro");
-      }
-      return response.json();
-    })
-    .catch((error) => {
-      console.error("Error en la API:", error);
-      return null;
-    });
+export const getBookById = async (id) => {
+  try {
+    const response = await fetch(`${API_URL}llibres/${id}`);
+    if (!response.ok) {
+      throw new Error("Error al obtener la información del libro");
+    }
+    const data = await response.json();
+
+    return data; // Retorna los resultados de la búsqueda
+  } catch (error) {
+    console.error("Error en la API:", error);
+    return null;
+  }
 };
 
 export async function logIn(username, password) {
@@ -71,7 +71,6 @@ export async function logIn(username, password) {
     }
 
     const data = await response.json();
-    //console.log("Login success:", data);
 
     // Guardar el token en localStorage
     localStorage.setItem("token", data.token);
@@ -97,7 +96,6 @@ export async function getUserInfo(token) {
     }
 
     const data = await response.json();
-    //console.log("User info:", data["user-details"]); // Debugging
     return data;
   } catch (err) {
     console.error("Error fetching user info:", err.message);
@@ -133,5 +131,26 @@ export async function updateUserProfile(token, email, telefon, avatar = null) {
   } catch (err) {
     console.error("Error al actualizar el perfil:", err.message);
     throw err;
+  }
+}
+
+export async function searchBook(queryText) {
+  try {
+    const response = await fetch(
+      `${API_URL}llibres/search?text=${encodeURIComponent(queryText)}`,
+      {
+        method: "GET",
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Error al buscar libros");
+    }
+
+    const data = await response.json();
+    return data; // Retorna los resultados de la búsqueda
+  } catch (err) {
+    console.error("Error en la búsqueda de libros:", err.message);
+    throw err; // Lanza el error para manejarlo en el componente
   }
 }

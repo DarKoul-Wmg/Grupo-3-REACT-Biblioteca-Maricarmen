@@ -15,7 +15,6 @@ export default function BooksTable({
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
-  //console.log("Current book data", currentData);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
