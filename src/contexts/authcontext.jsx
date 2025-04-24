@@ -24,7 +24,6 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-
   // Función para obtener la información del usuario
   const fetchUserInfo = async (token) => {
     try {
@@ -48,9 +47,10 @@ export const AuthProvider = ({ children }) => {
 
   // Función para cerrar sesión
   const logout = () => {
-    localStorage.removeItem("token"); // Eliminar el token de localStorage
-    setUser(null); // Limpiar el estado del usuario
-    setUserToken(null); // Limpiar el estado del token
+    window.location.reload();
+    localStorage.removeItem("token");
+    setUser(null);
+    setUserToken(null);
   };
 
   return (

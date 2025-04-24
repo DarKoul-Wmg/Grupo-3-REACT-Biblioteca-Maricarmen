@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef, useTransition } from "react";
 import Button from "./ui/button";
-import { getBooks, getBookById, searchBook } from "../services/api";
+import { getBooks, getItemById, searchItem } from "../services/api";
 
 export default function SearchBar({
-  placeholder = "Busca un llibre / autor",
+  placeholder = "Busca un item / autor",
   className = "text-black",
   onBookSelect,
   onSearch,
@@ -26,10 +26,10 @@ export default function SearchBar({
 
       let active = true;
 
-      searchBook(searchQuery).then((books) => {
+      searchItem(searchQuery).then((books) => {
         if (!active) return;
 
-        const items = books.results.length > 0 ? books.results.slice(0, 5) : []; // Obtener los primeros 5 libros o vacío si no hay resultados
+        const items = books.results.length > 0 ? books.results.slice(0, 5) : [];
 
         setFilteredItems(items);
         setIsOpen(true);
@@ -54,7 +54,7 @@ export default function SearchBar({
   }, []);
 
   const handleBookClick = (book) => {
-    getBookById(book.id).then((value) => {
+    getItemById(book.id, book.type).then((value) => {
       setSelectedExemplars(value.exemplars);
 
       onBookSelect?.(value);
@@ -67,7 +67,7 @@ export default function SearchBar({
 
     setIsLoading(() => {
       if (searchQuery != "") {
-        searchBook(searchQuery).then((books) => {
+        searchItem(searchQuery).then((books) => {
           if (books) {
             onSearch?.(books);
           } else {
@@ -145,7 +145,7 @@ export default function SearchBar({
               ))
             ) : (
               <div className="w-full text-left px-4 py-2 text-gray-500">
-                No s'han trobat llibres / autors
+                No s'han trobat items
               </div>
             )}
           </div>

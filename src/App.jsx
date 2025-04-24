@@ -11,7 +11,10 @@ import BooksTable from "./components/BooksTable";
 import InputCsv from "./components/InputCsv";
 import ExemplarsTable from "./components/ExemplarsTable";
 import UserForm from "./components/user-form";
-import { getBookById } from "./services/api";
+import { getItemById } from "./services/api";
+import { searchItem } from "./services/api";
+import { useTransition } from "react";
+import Modal from "./components/ui/modal";
 
 export default function App() {
   const { user, activeComponent, login } = useContext(AuthContext);
@@ -22,22 +25,22 @@ export default function App() {
   const [showBooksTable, setShowBooksTable] = useState(false);
   const [showLogin, setShowLogin] = useState(true);
   const [activeSidebarComponent, setActiveSidebarComponent] = useState(null);
+  const [showLoanModal, setShowLoanModal] = useState(false); // Estado para mostrar el modal
+  const [loanBookDetails, setLoanBookDetails] = useState(null); // Detalles del libro para el préstamo
+
+  const [isPending, startTransition] = useTransition();
 
   const handleBookSelect = (book) => {
-    console.log("Selected book: ", selectedBook);
-    getBookById(book.id).then((value) => {
-      setSelectedExemplars(value.exemplars);
-    });
-
     setSelectedBook(book);
     setShowBookDetails(true);
     setShowBooksTable(false);
     setShowLogin(false);
-    setActiveSidebarComponent("BookDetails"); // Activar BookDetails en el Sidebar
+    setActiveSidebarComponent("BookDetails");
   };
 
   const handleSearch = (search) => {
-    setSearchResults(search.results);
+    console.log("Search results: ", search);
+    setSearchResults(search);
     setShowBooksTable(true);
     setShowBookDetails(false);
     setShowLogin(false);
@@ -49,11 +52,11 @@ export default function App() {
     setShowLogin(true);
     setShowBookDetails(false);
     setShowBooksTable(false);
-    setActiveSidebarComponent(null); // Desactivar prioridad del Sidebar
+    setActiveSidebarComponent(null);
   };
 
   const handleSidebarClick = (component) => {
-    setActiveSidebarComponent(component); // Activar prioridad del Sidebar
+    setActiveSidebarComponent(component);
     setShowLogin(false);
     setShowBookDetails(false);
     setShowBooksTable(false);
@@ -63,11 +66,39 @@ export default function App() {
     }
   };
 
+  const fetchPage = async (page) => {
+    startTransition(async () => {
+      try {
+        const data = await searchItem(searchResults.searchText, page);
+        setSearchResults(data);
+      } catch (error) {
+        console.error("No se pudo cargar la página:", error.message);
+      }
+    });
+  };
+
+  const handlePageChange = (page) => {
+    fetchPage(page);
+  };
+
+  const handleLoanClick = (item) => {
+    console.log("Loan item: ", item, "selected book:", selectedBook);
+
+    setLoanBookDetails({ ...item, bookTitle: selectedBook.titol }); // Guardar los detalles del ejemplar seleccionado
+    setShowLoanModal(true); // Mostrar el modal
+  };
+
+  const closeModal = () => {
+    setShowLoanModal(false); // Cerrar el modal
+    setLoanBookDetails(null); // Limpiar los detalles del libro
+  };
+
   const renderBookDetails = () => {
     if (!selectedBook) return null;
+    console.log("Selected book", selectedBook, selectedBook.model_type);
 
     return (
-      <div className="mt-4 items-center flex flex-col gap-3">
+      <div className="m-4 items-center flex flex-col gap-3">
         <BookItem
           imageUrl={selectedBook.thumbnail_url}
           title={selectedBook.titol || selectedBook.title}
@@ -83,15 +114,13 @@ export default function App() {
           resum={selectedBook.description}
           anotacions={selectedBook.anotacions}
           mides={selectedBook.mides}
+          modelType={selectedBook.model_type || selectedBook.type}
         />
-        {selectedExemplars && (
+        {selectedExemplars && selectedExemplars.length >= 1 && (
           <ExemplarsTable
             array={selectedExemplars}
             user={user}
-            onLoanClick={(item) => {
-              console.log("Fer Préstec clicked for:", item);
-              // Add modal for loan spec 15
-            }}
+            onLoanClick={handleLoanClick}
           />
         )}
       </div>
@@ -139,38 +168,43 @@ export default function App() {
   }, [user, showLogin]);
 
   return (
-    <div className="h-screen w-screen bg-blue-100 flex flex-col">
+    <div className="min-h-screen w-screen bg-blue-100 flex flex-col">
       <Header
         handleBookSelect={handleBookSelect}
         onSearch={handleSearch}
         onLoginClick={handleLoginClick}
         setSelectedExemplars={setSelectedExemplars}
       />
-      <div className="flex w-screen h-full items-center">
-        <Sidebar user={user} onSidebarClick={handleSidebarClick} />
+      <div className="flex flex-1 w-full min-h-screen h-full ">
+        {user && <Sidebar user={user} onSidebarClick={handleSidebarClick} />}
 
-        <div className="w-full">
+        <div className="w-full flex-1 flex items-center justify-center">
           {showLogin ? (
             <SignIn />
           ) : !showBookDetails && !showBooksTable ? (
             <>{renderActiveComponent()}</>
           ) : showBooksTable ? (
-            searchResults && searchResults.length > 0 ? (
+            searchResults.results && searchResults.results.length > 0 ? (
               <BooksTable
-                array={searchResults}
+                data={searchResults}
                 onBookSelect={handleBookSelect}
                 setSelectedExemplars={setSelectedExemplars}
+                onPageChange={handlePageChange}
+                isPending={isPending}
               />
             ) : (
-              <h1>No s'han trobat llibres/autors</h1>
+              <h1>No s'han trobat items</h1>
             )
           ) : (
             renderBookDetails()
-
           )}
         </div>
       </div>
       <Footer />
+
+      {showLoanModal && (
+        <Modal bookDetails={loanBookDetails} onClose={closeModal} />
+      )}
     </div>
   );
 }

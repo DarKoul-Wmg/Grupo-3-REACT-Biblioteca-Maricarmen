@@ -1,204 +1,162 @@
-export default function Modal() {
+import { useState } from "react";
+
+export default function Modal({ bookDetails, onClose }) {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
+
+  const handleSearch = async (query) => {
+    setSearchQuery(query);
+    if (query.length > 2) {
+      const results = await searchUsers(query);
+      setSearchResults(results);
+    } else {
+      setSearchResults([]);
+    }
+  };
+
+  const handleUserSelect = (user) => {
+    setSelectedUser(user);
+    setSearchResults([]);
+    setSearchQuery(user.name);
+  };
+
+  const handleLoan = () => {
+    console.log("Préstec realitzat:", {
+      book: bookDetails,
+      user: selectedUser,
+      loanStart: new Date().toISOString().split("T")[0],
+      loanEnd: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split("T")[0],
+    });
+    onClose();
+  };
+
+  const loanStart = new Date().toISOString().split("T")[0];
+  const loanEnd = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .split("T")[0];
+
   return (
-    <>
-      <button
-        type="button"
-        class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
-        aria-haspopup="dialog"
-        aria-expanded="false"
-        aria-controls="hs-vertically-centered-modal"
-        data-hs-overlay="#hs-vertically-centered-modal"
-      >
-        Vertically centered modal
-      </button>
-      <div
-        id="hs-vertically-centered-modal"
-        class="hs-overlay hidden size-full fixed top-0 start-0 z-80 overflow-x-hidden overflow-y-auto pointer-events-none"
-        role="dialog"
-        tabindex="-1"
-        aria-labelledby="hs-vertically-centered-modal-label"
-      >
-        <div class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto min-h-[calc(100%-56px)] flex items-center">
-          <div class="w-full flex flex-col bg-white border border-gray-200 shadow-2xs rounded-xl pointer-events-auto">
-            <div class="flex justify-between items-center py-3 px-4 border-b border-gray-200">
-              <h3
-                id="hs-vertically-centered-modal-label"
-                class="font-bold text-gray-800"
-              >
-                Modal title
-              </h3>
-              <button
-                type="button"
-                class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none"
-                aria-label="Close"
-                data-hs-overlay="#hs-vertically-centered-modal"
-              >
-                <span class="sr-only">Close</span>
-                <svg
-                  class="shrink-0 size-4"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              </button>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+      <div className="w-full max-w-lg bg-white rounded-xl shadow-lg overflow-hidden">
+        <div className="flex items-center justify-between p-4 border-b">
+          <h3 className="text-lg font-semibold text-gray-800">
+            Préstec de llibre
+          </h3>
+          <button
+            onClick={onClose}
+            className="rounded-full p-1.5 hover:bg-gray-100 focus:outline-none"
+          >
+            <svg
+              className="w-5 h-5 text-gray-600"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <div className="p-5 space-y-4">
+          <div>
+            <h4 className="text-sm font-medium text-gray-500">Centre</h4>
+            <p className="text-base font-semibold text-gray-800">
+              {bookDetails?.centre?.nom}
+            </p>
+          </div>
+          <div>
+            <h4 className="text-sm font-medium text-gray-500">
+              <strong>Llibre a prestar: </strong>
+              {bookDetails?.bookTitle || "Títol del llibre"}
+            </h4>
+            <p className="text-base font-semibold text-gray-800">
+              {bookDetails?.nom}
+            </p>
+          </div>
+
+          <div className="flex items-center justify-between gap-2 bg-gray-50 p-4 rounded-md">
+            <div className="">
+              <p className="text-xs text-gray-500">Inici</p>
+              <p className="text-base font-medium text-gray-700">{loanStart}</p>
             </div>
-            <div class="p-4 overflow-y-auto">
-              <p class="text-gray-800">
-                This is a wider card with supporting text below as a natural
-                lead-in to additional content.
-              </p>
+            <div className="text-gray-400">
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9 5l7 7-7 7"
+                ></path>
+              </svg>
             </div>
-            <div class="flex justify-end items-center gap-x-2 py-3 px-4 border-t border-gray-200">
-              <button
-                type="button"
-                class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none"
-                data-hs-overlay="#hs-vertically-centered-modal"
-              >
-                Close
-              </button>
-              <button
-                type="button"
-                class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
-              >
-                Save changes
-              </button>
+            <div className="text-center">
+              <p className="text-xs text-gray-500">Fi previst de préstec</p>
+              <p className="text-base font-medium text-gray-700">{loanEnd}</p>
             </div>
           </div>
-        </div>
-      </div>
-      <button
-        type="button"
-        class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
-        aria-haspopup="dialog"
-        aria-expanded="false"
-        aria-controls="hs-vertically-centered-scrollable-modal"
-        data-hs-overlay="#hs-vertically-centered-scrollable-modal"
-      >
-        Vertically centered scrollable modal
-      </button>
-      <div
-        id="hs-vertically-centered-scrollable-modal"
-        class="hs-overlay hidden size-full fixed top-0 start-0 z-80 overflow-x-hidden overflow-y-auto pointer-events-none"
-        role="dialog"
-        tabindex="-1"
-        aria-labelledby="hs-vertically-centered-scrollable-modal-label"
-      >
-        <div class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto h-[calc(100%-56px)] min-h-[calc(100%-56px)] flex items-center">
-          <div class="w-full max-h-full overflow-hidden flex flex-col bg-white border border-gray-200 shadow-2xs rounded-xl pointer-events-auto">
-            <div class="flex justify-between items-center py-3 px-4 border-b border-gray-200">
-              <h3
-                id="hs-vertically-centered-scrollable-modal-label"
-                class="font-bold text-gray-800"
-              >
-                Modal title
-              </h3>
-              <button
-                type="button"
-                class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none"
-                aria-label="Close"
-                data-hs-overlay="#hs-vertically-centered-scrollable-modal"
-              >
-                <span class="sr-only">Close</span>
-                <svg
-                  class="shrink-0 size-4"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              </button>
-            </div>
-            <div class="p-4 overflow-y-auto">
-              <div class="space-y-4">
-                <div>
-                  <h3 class="text-lg font-semibold text-gray-800">Be bold</h3>
-                  <p class="mt-1 text-gray-800">
-                    Motivate teams to do their best work. Offer best practices
-                    to get users going in the right direction. Be bold and offer
-                    just enough help to get the work started, and then get out
-                    of the way. Give accurate information so users can make
-                    educated decisions. Know your user's struggles and desired
-                    outcomes and give just enough information to let them get
-                    where they need to go.
-                  </p>
-                </div>
 
-                <div>
-                  <h3 class="text-lg font-semibold text-gray-800">
-                    Be optimistic
-                  </h3>
-                  <p class="mt-1 text-gray-800">
-                    Focusing on the details gives people confidence in our
-                    products. Weave a consistent story across our fabric and be
-                    diligent about vocabulary across all messaging by being
-                    brand conscious across products to create a seamless flow
-                    across all the things. Let people know that they can jump in
-                    and start working expecting to find a dependable experience
-                    across all the things. Keep teams in the loop about what is
-                    happening by informing them of relevant features, products
-                    and opportunities for success. Be on the journey with them
-                    and highlight the key points that will help them the most -
-                    right now. Be in the moment by focusing attention on the
-                    important bits first.
-                  </p>
-                </div>
-
-                <div>
-                  <h3 class="text-lg font-semibold text-gray-800">
-                    Be practical, with a wink
-                  </h3>
-                  <p class="mt-1 text-gray-800">
-                    Keep our own story short and give teams just enough to get
-                    moving. Get to the point and be direct. Be concise - we tell
-                    the story of how we can help, but we do it directly and with
-                    purpose. Be on the lookout for opportunities and be quick to
-                    offer a helping hand. At the same time realize that novbody
-                    likes a nosy neighbor. Give the user just enough to know
-                    that something awesome is around the corner and then get out
-                    of the way. Write clear, accurate, and concise text that
-                    makes interfaces more usable and consistent - and builds
-                    trust. We strive to write text that is understandable by
-                    anyone, anywhere, regardless of their culture or language so
-                    that everyone feels they are part of the team.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="flex justify-end items-center gap-x-2 py-3 px-4 border-t border-gray-200">
-              <button
-                type="button"
-                class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none"
-                data-hs-overlay="#hs-vertically-centered-scrollable-modal"
-              >
-                Close
-              </button>
-              <button
-                type="button"
-                class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
-              >
-                Save changes
-              </button>
-            </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Cerca d'usuari
+            </label>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => handleSearch(e.target.value)}
+              className="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Nom de l'usuari"
+            />
+            {searchResults.length > 0 && (
+              <ul className="mt-2 max-h-40 overflow-y-auto border border-gray-200 rounded-md divide-y">
+                {searchResults.map((user) => (
+                  <li
+                    key={user.id}
+                    onClick={() => handleUserSelect(user)}
+                    className="p-2 hover:bg-blue-50 cursor-pointer text-sm"
+                  >
+                    {user.name}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </div>
+
+        <div className="flex justify-end items-center gap-2 p-4 border-t">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+          >
+            Cancel·lar
+          </button>
+          <button
+            onClick={handleLoan}
+            disabled={!selectedUser}
+            className={`px-4 py-2 text-sm font-medium text-white rounded-lg shadow-sm transition-colors ${
+              selectedUser
+                ? "bg-blue-600 hover:bg-blue-700"
+                : "bg-gray-300 cursor-not-allowed"
+            }`}
+          >
+            Confirmar préstec
+          </button>
+        </div>
       </div>
-    </>
+    </div>
   );
 }

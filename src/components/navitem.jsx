@@ -71,7 +71,7 @@ export default function SidebarNavigation({ onSidebarClick }) {
   return (
     <nav className="h-full overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100">
       <div className="pb-0 px-2 w-full flex flex-col flex-wrap">
-        <ul className="space-y-1">
+        <ul className="space-y-1 h-full">
           {visibleItems.map(({ icon, label, component }, index) => (
             <li key={index} className="p-3">
               <button

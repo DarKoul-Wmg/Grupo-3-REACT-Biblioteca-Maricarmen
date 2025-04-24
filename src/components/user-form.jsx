@@ -31,7 +31,7 @@ export default function UserForm() {
   };
 
   return (
-    <div className="flex gap-1 w-full items-center justify-center">
+    <div className=" py-10 flex gap-1 w-full items-center justify-center">
       <UserProfile
         firstName={user?.first_name || "Nom"}
         lastName={user?.last_name || "Cognom"}

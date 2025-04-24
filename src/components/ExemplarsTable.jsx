@@ -26,7 +26,7 @@ export default function ExemplarsTable({ array, user, onLoanClick }) {
     user?.groups?.includes("Administrador");
 
   return (
-    <div className="flex flex-col w-full max-w-6xl mx-auto">
+    <div className="flex flex-col w-full max-w-6xl mx-auto pb-20">
       <h2 className="text-2xl font-semibold text-gray-800 mb-4">Exemplars</h2>
 
       <div className="-m-1.5 overflow-x-auto">

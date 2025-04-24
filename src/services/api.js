@@ -38,13 +38,15 @@ export const importCsv = async (file) => {
   }
 };
 
-export const getBookById = async (id) => {
+export const getItemById = async (id, itemType) => {
+  console.log("ITEM DETAILS", id, itemType);
   try {
-    const response = await fetch(`${API_URL}llibres/${id}`);
+    const response = await fetch(`${API_URL}catalegs/${itemType}/${id}`);
     if (!response.ok) {
-      throw new Error("Error al obtener la información del libro");
+      throw new Error("Error al obtener la información del Item");
     }
     const data = await response.json();
+    console.log("data", data);
 
     return data; // Retorna los resultados de la búsqueda
   } catch (error) {
@@ -134,10 +136,12 @@ export async function updateUserProfile(token, email, telefon, avatar = null) {
   }
 }
 
-export async function searchBook(queryText) {
+export async function searchItem(queryText, page = 1) {
   try {
     const response = await fetch(
-      `${API_URL}llibres/search?text=${encodeURIComponent(queryText)}`,
+      `${API_URL}catalegs/search?text=${encodeURIComponent(
+        queryText
+      )}&page=${page}`,
       {
         method: "GET",
       }
@@ -148,9 +152,13 @@ export async function searchBook(queryText) {
     }
 
     const data = await response.json();
-    return data; // Retorna los resultados de la búsqueda
+    let modifiedData = data;
+    if (data) {
+      modifiedData = { ...data, searchText: queryText };
+    }
+    return modifiedData; // { current_page, total_pages, results }
   } catch (err) {
     console.error("Error en la búsqueda de libros:", err.message);
-    throw err; // Lanza el error para manejarlo en el componente
+    throw err;
   }
 }
