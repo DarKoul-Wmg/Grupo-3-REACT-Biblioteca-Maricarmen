@@ -1,15 +1,27 @@
 import { useState } from "react";
+import { searchUsers, insertLoan } from "../../services/api";
+import Toast from "./custom-toast";
 
-export default function Modal({ bookDetails, onClose }) {
+export default function Modal({ loanDetails, onClose }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedUser, setSelectedUser] = useState([]);
+  let searchTimeout;
 
-  const handleSearch = async (query) => {
+  const handleSearch = (query) => {
     setSearchQuery(query);
+    clearTimeout(searchTimeout);
     if (query.length > 2) {
-      const results = await searchUsers(query);
-      setSearchResults(results);
+      searchTimeout = setTimeout(async () => {
+        try {
+          const results = await searchUsers(query);
+          console.log("User results: ", results);
+          setSearchResults(results);
+        } catch (error) {
+          console.error("Error en la búsqueda de usuarios:", error.message);
+          setSearchResults([]);
+        }
+      }, 300); // 300ms de debounce
     } else {
       setSearchResults([]);
     }
@@ -23,13 +35,22 @@ export default function Modal({ bookDetails, onClose }) {
 
   const handleLoan = () => {
     console.log("Préstec realitzat:", {
-      book: bookDetails,
+      book: loanDetails,
       user: selectedUser,
       loanStart: new Date().toISOString().split("T")[0],
       loanEnd: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
         .toISOString()
         .split("T")[0],
     });
+
+    insertLoan(selectedUser.id, loanDetails.id)
+      .then((response) => {
+        Toast.success(`Préstec realitzat correctament: ${response}`);
+      })
+      .catch((error) => {
+        Toast.error(`ERROR: ${error}`);
+      });
+
     onClose();
   };
 
@@ -70,16 +91,16 @@ export default function Modal({ bookDetails, onClose }) {
           <div>
             <h4 className="text-sm font-medium text-gray-500">Centre</h4>
             <p className="text-base font-semibold text-gray-800">
-              {bookDetails?.centre?.nom}
+              {loanDetails?.centre?.nom}
             </p>
           </div>
           <div>
             <h4 className="text-sm font-medium text-gray-500">
               <strong>Llibre a prestar: </strong>
-              {bookDetails?.bookTitle || "Títol del llibre"}
+              {loanDetails?.bookTitle || "Títol del llibre"}
             </h4>
             <p className="text-base font-semibold text-gray-800">
-              {bookDetails?.nom}
+              {loanDetails?.nom}
             </p>
           </div>
 
@@ -114,22 +135,44 @@ export default function Modal({ bookDetails, onClose }) {
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Cerca d'usuari
             </label>
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => handleSearch(e.target.value)}
-              className="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Nom de l'usuari"
-            />
-            {searchResults.length > 0 && (
+            <div className="relative">
+              <input
+                type="text"
+                value={
+                  selectedUser && selectedUser.length > 0
+                    ? `${selectedUser[0].first_name} ${selectedUser[0].last_name}`
+                    : searchQuery
+                }
+                onChange={(e) => {
+                  if (!selectedUser || selectedUser.length === 0)
+                    handleSearch(e.target.value);
+                }}
+                className="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Buscar per nom/cognom/tfn"
+                disabled={selectedUser && selectedUser.length > 0} // Deshabilitar el input si hay un usuario seleccionado
+              />
+              {selectedUser && selectedUser.length > 0 && (
+                <button
+                  onClick={() => {
+                    setSelectedUser([]); // Limpiar la selección del usuario
+                    setSearchQuery("");
+                    setSearchResults([]);
+                  }}
+                  className="absolute cursor-pointer right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+            {selectedUser.length === 0 && searchResults.length > 0 && (
               <ul className="mt-2 max-h-40 overflow-y-auto border border-gray-200 rounded-md divide-y">
                 {searchResults.map((user) => (
                   <li
                     key={user.id}
-                    onClick={() => handleUserSelect(user)}
+                    onClick={() => setSelectedUser(user)}
                     className="p-2 hover:bg-blue-50 cursor-pointer text-sm"
                   >
-                    {user.name}
+                    {user.first_name} {user.last_name}
                   </li>
                 ))}
               </ul>

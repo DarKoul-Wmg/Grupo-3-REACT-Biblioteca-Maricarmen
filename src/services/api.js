@@ -162,3 +162,44 @@ export async function searchItem(queryText, page = 1) {
     throw err;
   }
 }
+export async function searchUsers(textQuery) {
+  try {
+    const response = await fetch(`${API_URL}usuaris/${textQuery}`, {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      if (response.status === 500) {
+        throw new Error("Server error: Unable to process the request");
+      }
+      throw new Error("Failed to fetch user info");
+    }
+
+    const data = await response.json();
+    return data; // Assuming the API returns a list of users
+  } catch (err) {
+    console.error("Error fetching user info:", err.message);
+    throw err;
+  }
+}
+
+export async function insertLoan(userId, exemplarId) {
+  try {
+    const response = await fetch(`${API_URL}prestecs/${userId}/${exemplarId}`, {
+      method: "POST",
+    });
+
+    if (!response.ok) {
+      if (response.status === 500) {
+        throw new Error("Server error: Unable to process the request");
+      }
+      throw new Error("Failed to insert loan");
+    }
+
+    const data = await response.json();
+    return data; // Assuming the API returns the loan details
+  } catch (err) {
+    console.error("Error inserting loan:", err.message);
+    throw err;
+  }
+}

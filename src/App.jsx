@@ -168,17 +168,17 @@ export default function App() {
   }, [user, showLogin]);
 
   return (
-    <div className="min-h-screen w-screen bg-blue-100 flex flex-col">
+    <div className="min-h-screen w-screen bg-blue-100 dark:bg-[#141414] flex flex-col">
       <Header
         handleBookSelect={handleBookSelect}
         onSearch={handleSearch}
         onLoginClick={handleLoginClick}
         setSelectedExemplars={setSelectedExemplars}
       />
-      <div className="flex flex-1 w-full min-h-screen h-full ">
+      <div className="flex flex-1 w-full min-h-screen h-full dark:bg-[#282828] bg-white">
         {user && <Sidebar user={user} onSidebarClick={handleSidebarClick} />}
 
-        <div className="w-full flex-1 flex items-center justify-center">
+        <div className="w-full flex-1 flex items-center justify-center dark:bg-[#282828] bg-blue-100">
           {showLogin ? (
             <SignIn />
           ) : !showBookDetails && !showBooksTable ? (
@@ -193,7 +193,7 @@ export default function App() {
                 isPending={isPending}
               />
             ) : (
-              <h1>No s'han trobat items</h1>
+              <h1 className="dark:text-white">No s'han trobat items</h1>
             )
           ) : (
             renderBookDetails()
@@ -203,7 +203,7 @@ export default function App() {
       <Footer />
 
       {showLoanModal && (
-        <Modal bookDetails={loanBookDetails} onClose={closeModal} />
+        <Modal loanDetails={loanBookDetails} onClose={closeModal} />
       )}
     </div>
   );

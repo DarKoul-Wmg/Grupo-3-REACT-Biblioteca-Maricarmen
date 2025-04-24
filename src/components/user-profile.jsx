@@ -30,9 +30,9 @@ export default function UserProfile({
       </div>
       <div className="flex flex-col items-start">
         <div className="flex items-center gap-3">
-          <h1 className="text-3xl truncate max-w-65">
+          <p className="text-3xl truncate max-w-65 dark:text-white text-black  ">
             {firstName} {lastName}
-          </h1>
+          </p>
           <Badge type="role" value={role[0]} />
         </div>
         <h2 className="text-sm text-gray-500">{school}</h2>

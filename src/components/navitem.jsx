@@ -10,6 +10,7 @@ export function UserIcon() {
       viewBox="0 0 20 20"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      className=" dark:fill-white"
     >
       <path
         d="M15.3333 16V14.6667C15.3333 13.9594 15.0524 13.2811 14.5523 12.781C14.0522 12.281 13.3739 12 12.6667 12H7.33333C6.62609 12 5.94781 12.281 5.44772 12.781C4.94762 13.2811 4.66667 13.9594 4.66667 14.6667V16M12.6667 6.66667C12.6667 8.13943 11.4728 9.33333 10 9.33333C8.52724 9.33333 7.33333 8.13943 7.33333 6.66667C7.33333 5.19391 8.52724 4 10 4C11.4728 4 12.6667 5.19391 12.6667 6.66667Z"
@@ -27,6 +28,7 @@ export function FileIcon() {
       viewBox="0 0 20 20"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      className=" dark:fill-white"
     >
       <path
         d="M10.6667 3.33337H6C5.64638 3.33337 5.30724 3.47385 5.05719 3.7239C4.80714 3.97395 4.66667 4.31309 4.66667 4.66671V15.3334C4.66667 15.687 4.80714 16.0261 5.05719 16.2762C5.30724 16.5262 5.64638 16.6667 6 16.6667H14C14.3536 16.6667 14.6928 16.5262 14.9428 16.2762C15.1929 16.0261 15.3333 15.687 15.3333 15.3334V8.00004M10.6667 3.33337L15.3333 8.00004M10.6667 3.33337V8.00004H15.3333"
@@ -78,7 +80,7 @@ export default function SidebarNavigation({ onSidebarClick }) {
                 onClick={() => {
                   onSidebarClick(component);
                 }}
-                className="w-full flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 cursor-pointer"
+                className="w-full flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 dark:text-white rounded-lg hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 cursor-pointer dark:fill-white"
               >
                 {icon}
                 {label}

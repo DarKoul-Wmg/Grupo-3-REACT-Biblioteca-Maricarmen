@@ -31,7 +31,7 @@ export default function UserForm() {
   };
 
   return (
-    <div className=" py-10 flex gap-1 w-full items-center justify-center">
+    <div className="py-10 flex gap-1 w-full items-center justify-center dark:bg-[#282828] bg-blue-100">
       <UserProfile
         firstName={user?.first_name || "Nom"}
         lastName={user?.last_name || "Cognom"}
@@ -39,9 +39,9 @@ export default function UserForm() {
         image={user?.imatge || null}
         role={user?.groups || ["usuari"]}
       />
-      <div className="bg-gray-50 border border-gray-200 rounded-xl shadow-sm w-2/4">
-        <div className=" py-2 border-b border-gray-200">
-          <h3 className="text-gray-800 font-semibold">
+      <div className="bg-gray-50 border border-gray-200 rounded-xl shadow-sm w-2/4 dark:bg-[#282828] dark:border-[#3c3c3c]">
+        <div className="py-2 border-b border-gray-200 dark:border-[#3c3c3c]">
+          <h3 className="text-gray-800 font-semibold dark:text-white">
             Edita la informació de l'usuari
           </h3>
         </div>
@@ -49,65 +49,65 @@ export default function UserForm() {
           <form onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium text-gray-700 dark:text-white">
                   Nom
                 </label>
                 <Input
                   type="text"
                   value={user?.first_name || ""}
-                  className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                  className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm dark:bg-[#3c3c3c] dark:border-[#3c3c3c] dark:text-white"
                   disabled
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium text-gray-700 dark:text-white">
                   Cognom
                 </label>
                 <Input
                   type="text"
                   value={user?.last_name || ""}
-                  className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                  className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm dark:bg-[#3c3c3c] dark:border-[#3c3c3c] dark:text-white"
                   disabled
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium text-gray-700 dark:text-white">
                   Número de telèfon
                 </label>
                 <Input
                   type="text"
                   value={telefon}
                   onChange={(e) => setTelefon(e.target.value)}
-                  className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                  className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm dark:bg-[#3c3c3c] dark:border-[#3c3c3c] dark:text-white"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium text-gray-700 dark:text-white">
                   Correu electrònic
                 </label>
                 <Input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                  className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm dark:bg-[#3c3c3c] dark:border-[#3c3c3c] dark:text-white"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium text-gray-700 dark:text-white">
                   Foto de perfil
                 </label>
                 <Input
                   type="file"
                   accept="image/*"
                   onChange={(e) => setAvatar(e.target.files[0])}
-                  className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                  className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm dark:bg-[#3c3c3c] dark:border-[#3c3c3c] dark:text-white"
                 />
               </div>
             </div>
             <div className="mt-4 text-right">
               <Button
                 type="submit"
-                className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-blue-500 dark:hover:bg-blue-600"
                 disabled={loading}
               >
                 {loading ? "Actualitzant..." : "Enviar"}
@@ -115,10 +115,14 @@ export default function UserForm() {
             </div>
           </form>
           {successMessage && (
-            <p className="text-green-600 text-sm mt-2">{successMessage}</p>
+            <p className="text-green-600 text-sm mt-2 dark:text-green-400">
+              {successMessage}
+            </p>
           )}
           {errorMessage && (
-            <p className="text-red-600 text-sm mt-2">{errorMessage}</p>
+            <p className="text-red-600 text-sm mt-2 dark:text-red-400">
+              {errorMessage}
+            </p>
           )}
         </div>
       </div>

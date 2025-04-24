@@ -27,13 +27,15 @@ export default function ExemplarsTable({ array, user, onLoanClick }) {
 
   return (
     <div className="flex flex-col w-full max-w-6xl mx-auto pb-20">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-4">Exemplars</h2>
+      <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4">
+        Exemplars
+      </h2>
 
       <div className="-m-1.5 overflow-x-auto">
         <div className="p-1.5 min-w-full inline-block align-middle">
-          <div className="overflow-hidden border border-gray-200 rounded-lg shadow">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-blue-500">
+          <div className="overflow-hidden border border-gray-200 dark:border-gray-700 rounded-lg shadow">
+            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+              <thead className="bg-blue-500 dark:bg-[#282828]">
                 <tr>
                   <th className="px-8 py-3 text-start text-xs font-semibold text-white uppercase">
                     Registre
@@ -54,7 +56,7 @@ export default function ExemplarsTable({ array, user, onLoanClick }) {
                   )}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200 bg-white">
+              <tbody className="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-[#141414]">
                 {currentData.map((item) => {
                   const isDisabled =
                     item.exclos_prestec ||
@@ -69,35 +71,35 @@ export default function ExemplarsTable({ array, user, onLoanClick }) {
                   return (
                     <tr
                       key={item.id}
-                      className="hover:bg-blue-100 transition-colors"
+                      className="hover:bg-blue-100 dark:hover:bg-[#3c3c3c] transition-colors"
                     >
-                      <td className="px-8 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
+                      <td className="px-8 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-white">
                         {item.registre}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 text-center">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white text-center">
                         <input
                           type="checkbox"
                           checked={item.exclos_prestec}
                           disabled
-                          className="w-5 h-5 accent-blue-600"
+                          className="w-5 h-5 accent-blue-600 dark:accent-blue-400"
                         />
                       </td>
-                      <td className="px-8 py-4 whitespace-nowrap text-sm text-gray-800">
+                      <td className="px-8 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white">
                         {item.baixa ? "Sí" : "No"}
                       </td>
-                      <td className="px-8 py-4 whitespace-nowrap text-sm text-gray-800 text-left">
+                      <td className="px-8 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white text-left">
                         {item.centre.nom}
                       </td>
                       {isBibliotecariOrAdmin && (
-                        <td className="px-8 py-4 whitespace-nowrap text-sm text-gray-800 text-left">
+                        <td className="px-8 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white text-left">
                           <Tooltip message={tooltipMessage}>
                             <Button
                               onClick={() => onLoanClick(item)}
                               disabled={isDisabled}
                               className={`px-4 py-2 rounded-md transition ${
                                 isDisabled
-                                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                                  : "bg-blue-500 text-white hover:bg-blue-600"
+                                  ? "bg-gray-300 text-gray-500 cursor-not-allowed dark:bg-gray-700 dark:text-gray-400"
+                                  : "bg-blue-500 text-white hover:bg-blue-600 dark:bg-blue-400 dark:hover:bg-blue-500"
                               }`}
                             >
                               Fer Préstec
@@ -122,8 +124,8 @@ export default function ExemplarsTable({ array, user, onLoanClick }) {
             disabled={currentPage === 1}
             className={`px-3 py-2 text-xl rounded-md border ${
               currentPage === 1
-                ? "text-gray-400 border-gray-200 cursor-not-allowed"
-                : "text-blue-700 border-blue-300 hover:bg-blue-100"
+                ? "text-gray-400 border-gray-200 cursor-not-allowed dark:text-gray-600 dark:border-gray-700"
+                : "text-blue-700 border-blue-300 hover:bg-blue-100 dark:text-blue-400 dark:border-blue-500 dark:hover:bg-[#3c3c3c]"
             }`}
           >
             «
@@ -135,8 +137,8 @@ export default function ExemplarsTable({ array, user, onLoanClick }) {
             disabled={currentPage === 1}
             className={`px-3 py-2 text-xl rounded-md border ${
               currentPage === 1
-                ? "text-gray-400 border-gray-200 cursor-not-allowed"
-                : "text-blue-700 border-blue-300 hover:bg-blue-100"
+                ? "text-gray-400 border-gray-200 cursor-not-allowed dark:text-gray-600 dark:border-gray-700"
+                : "text-blue-700 border-blue-300 hover:bg-blue-100 dark:text-blue-400 dark:border-blue-500 dark:hover:bg-[#3c3c3c]"
             }`}
           >
             ‹
@@ -149,8 +151,8 @@ export default function ExemplarsTable({ array, user, onLoanClick }) {
               onClick={() => handlePageChange(index + 1)}
               className={`mx-1 px-3 py-1 text-xl rounded-md border transition-all ${
                 currentPage === index + 1
-                  ? "bg-blue-700 text-white border-[#8B8EF9]"
-                  : "bg-blue-500 text-white border-gray-300 hover:bg-blue-300"
+                  ? "bg-blue-700 text-white border-[#8B8EF9] dark:bg-blue-500 dark:border-blue-400"
+                  : "bg-blue-500 text-white border-gray-300 hover:bg-blue-300 dark:bg-[#282828] dark:border-gray-600 dark:hover:bg-[#3c3c3c]"
               }`}
             >
               {index + 1}
@@ -163,8 +165,8 @@ export default function ExemplarsTable({ array, user, onLoanClick }) {
             disabled={currentPage === totalPages}
             className={`px-3 py-2 text-xl rounded-md border ${
               currentPage === totalPages
-                ? "text-gray-400 border-gray-200 cursor-not-allowed"
-                : "text-blue-700 border-blue-300 hover:bg-blue-100"
+                ? "text-gray-400 border-gray-200 cursor-not-allowed dark:text-gray-600 dark:border-gray-700"
+                : "text-blue-700 border-blue-300 hover:bg-blue-100 dark:text-blue-400 dark:border-blue-500 dark:hover:bg-[#3c3c3c]"
             }`}
           >
             ›
@@ -176,8 +178,8 @@ export default function ExemplarsTable({ array, user, onLoanClick }) {
             disabled={currentPage === totalPages}
             className={`px-3 py-2 text-xl rounded-md border ${
               currentPage === totalPages
-                ? "text-gray-400 border-gray-200 cursor-not-allowed"
-                : "text-blue-700 border-blue-300 hover:bg-blue-100"
+                ? "text-gray-400 border-gray-200 cursor-not-allowed dark:text-gray-600 dark:border-gray-700"
+                : "text-blue-700 border-blue-300 hover:bg-blue-100 dark:text-blue-400 dark:border-blue-500 dark:hover:bg-[#3c3c3c]"
             }`}
           >
             »

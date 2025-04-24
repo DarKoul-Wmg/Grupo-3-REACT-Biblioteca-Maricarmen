@@ -7,7 +7,6 @@ export default function BookItem({
   author = "Autor desconegut",
   resum = "Resum no disponible",
   modelType,
-  // Campos específicos para cada tipo
   isbn = "ISBN no disponible",
   editorial = "Editorial no disponible",
   colleccio = "Col·lecció no disponible",
@@ -28,11 +27,10 @@ export default function BookItem({
   marca = "Marca no disponible",
   model = "Model no disponible",
 }) {
-  console.log("TIPO A MOSTRAR: ", modelType);
   return (
-    <div className="flex bg-white rounded-lg shadow-md overflow-hidden w-full max-w-4xl justify-evenly">
+    <div className="flex bg-white dark:bg-[#141414] rounded-lg shadow-md overflow-hidden w-full max-w-4xl justify-evenly">
       {/* Imatge del contingut */}
-      <div className="w-1/3 bg-gray-200 flex items-center justify-center p-4">
+      <div className="w-1/3 bg-gray-200 dark:bg-gray-800 flex items-center justify-center p-4">
         {imageUrl ? (
           <img
             src={imageUrl}
@@ -40,23 +38,27 @@ export default function BookItem({
             className="object-cover h-48 rounded-md"
           />
         ) : (
-          <span className="text-black text-lg">Imatge no disponible</span>
+          <span className="text-black dark:text-white text-lg">
+            Imatge no disponible
+          </span>
         )}
       </div>
 
       {/* Detalls del contingut */}
-      <div className="p-6 flex flex-col justify-start gap-2 text-start ">
+      <div className="p-6 flex flex-col justify-start gap-2 text-start">
         <div className="flex gap-3 items-center">
-          <h2 className="text-2xl font-semibold text-gray-800">{title}</h2>
+          <h2 className="text-2xl font-semibold text-gray-800 dark:text-white">
+            {title}
+          </h2>
           <Badge type="type" value={modelType}></Badge>
         </div>
         {author && (
-          <p className="text-lg text-gray-700 font-medium">
+          <p className="text-lg text-gray-700 dark:text-white font-medium">
             <strong>Autor:</strong> {author}
           </p>
         )}
         {resum && (
-          <p className="text-sm">
+          <p className="text-sm text-gray-800 dark:text-white">
             <strong>Resum:</strong> {resum}
           </p>
         )}
@@ -65,62 +67,68 @@ export default function BookItem({
         {modelType === "Llibre" && (
           <>
             {isbn && (
-              <p className="text-sm">
+              <p className="text-sm text-gray-800 dark:text-white">
                 <strong>ISBN:</strong> {isbn}
               </p>
             )}
             {editorial && (
-              <p className="text-sm">
+              <p className="text-sm text-gray-800 dark:text-white">
                 <strong>Editorial:</strong> {editorial}
               </p>
             )}
             {colleccio && (
-              <p className="text-sm">
+              <p className="text-sm text-gray-800 dark:text-white">
                 <strong>Col·lecció:</strong> {colleccio}
               </p>
             )}
             {lloc && (
-              <p className="text-sm">
+              <p className="text-sm text-gray-800 dark:text-white">
                 <strong>Lloc:</strong> {lloc}
               </p>
             )}
             {pais && (
-              <p className="text-sm">
+              <p className="text-sm text-gray-800 dark:text-white">
                 <strong>País:</strong> {pais}
               </p>
             )}
             {llengua && (
-              <p className="text-sm">
+              <p className="text-sm text-gray-800 dark:text-white">
                 <strong>Llengua:</strong> {llengua}
               </p>
             )}
             {numero && (
-              <p className="text-sm">
+              <p className="text-sm text-gray-800 dark:text-white">
                 <strong>Número:</strong> {numero}
               </p>
             )}
             {volums && (
-              <p className="text-sm">
+              <p className="text-sm text-gray-800 dark:text-white">
                 <strong>Volums:</strong> {volums}
               </p>
             )}
             {pagines && (
-              <p className="text-sm">
+              <p className="text-sm text-gray-800 dark:text-white">
                 <strong>Pàgines:</strong> {pagines}
               </p>
             )}
             {infoUrl && (
-              <p className="text-sm">
+              <p className="text-sm text-gray-800 dark:text-white">
                 <strong>Info URL:</strong>{" "}
-                <a href={infoUrl} className="text-blue-500 hover:underline">
+                <a
+                  href={infoUrl}
+                  className="text-blue-500 dark:text-blue-400 hover:underline"
+                >
                   {infoUrl}
                 </a>
               </p>
             )}
             {previewUrl && (
-              <p className="text-sm">
+              <p className="text-sm text-gray-800 dark:text-white">
                 <strong>Preview URL:</strong>{" "}
-                <a href={previewUrl} className="text-blue-500 hover:underline">
+                <a
+                  href={previewUrl}
+                  className="text-blue-500 dark:text-blue-400 hover:underline"
+                >
                   {previewUrl}
                 </a>
               </p>
@@ -131,42 +139,42 @@ export default function BookItem({
         {modelType === "Revista" && (
           <>
             {issn && (
-              <p className="text-sm">
+              <p className="text-sm text-gray-800 dark:text-white">
                 <strong>ISSN:</strong> {issn}
               </p>
             )}
             {editorial && (
-              <p className="text-sm">
+              <p className="text-sm text-gray-800 dark:text-white">
                 <strong>Editorial:</strong> {editorial}
               </p>
             )}
             {lloc && (
-              <p className="text-sm">
+              <p className="text-sm text-gray-800 dark:text-white">
                 <strong>Lloc:</strong> {lloc}
               </p>
             )}
             {pais && (
-              <p className="text-sm">
+              <p className="text-sm text-gray-800 dark:text-white">
                 <strong>País:</strong> {pais}
               </p>
             )}
             {llengua && (
-              <p className="text-sm">
+              <p className="text-sm text-gray-800 dark:text-white">
                 <strong>Llengua:</strong> {llengua}
               </p>
             )}
             {numero && (
-              <p className="text-sm">
+              <p className="text-sm text-gray-800 dark:text-white">
                 <strong>Número:</strong> {numero}
               </p>
             )}
             {volums && (
-              <p className="text-sm">
+              <p className="text-sm text-gray-800 dark:text-white">
                 <strong>Volums:</strong> {volums}
               </p>
             )}
             {pagines && (
-              <p className="text-sm">
+              <p className="text-sm text-gray-800 dark:text-white">
                 <strong>Pàgines:</strong> {pagines}
               </p>
             )}
@@ -176,17 +184,17 @@ export default function BookItem({
         {modelType === "CD" && (
           <>
             {discografica && (
-              <p className="text-sm">
+              <p className="text-sm text-gray-800 dark:text-white">
                 <strong>Discogràfica:</strong> {discografica}
               </p>
             )}
             {estil && (
-              <p className="text-sm">
+              <p className="text-sm text-gray-800 dark:text-white">
                 <strong>Estil:</strong> {estil}
               </p>
             )}
             {duracio && (
-              <p className="text-sm">
+              <p className="text-sm text-gray-800 dark:text-white">
                 <strong>Duració:</strong> {duracio}
               </p>
             )}
@@ -196,12 +204,12 @@ export default function BookItem({
         {(modelType === "DVD" || modelType === "BR") && (
           <>
             {productora && (
-              <p className="text-sm">
+              <p className="text-sm text-gray-800 dark:text-white">
                 <strong>Productora:</strong> {productora}
               </p>
             )}
             {duracio && (
-              <p className="text-sm">
+              <p className="text-sm text-gray-800 dark:text-white">
                 <strong>Duració:</strong> {duracio}
               </p>
             )}
@@ -211,12 +219,12 @@ export default function BookItem({
         {modelType === "Dispositiu" && (
           <>
             {marca && (
-              <p className="text-sm">
+              <p className="text-sm text-gray-800 dark:text-white">
                 <strong>Marca:</strong> {marca}
               </p>
             )}
             {model && (
-              <p className="text-sm">
+              <p className="text-sm text-gray-800 dark:text-white">
                 <strong>Model:</strong> {model}
               </p>
             )}
