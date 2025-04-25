@@ -4,6 +4,14 @@ import Button from "./ui/button";
 
 export default function InputCsv() {
   const [file, setFile] = useState(null);
+  const [responseData, setResponseData] = useState({
+    imported: 0,
+    errorCount: 0,
+    warningCount: 0,
+    resultsMessage: [],
+    resultsStatus: [],
+    message: "",
+  });
 
   function handleFileChange(event) {
     const file = event.target.files[0];
@@ -30,6 +38,15 @@ export default function InputCsv() {
     }
     try {
       const response = await importCsv(file);
+      setResponseData({
+        imported: response.imported || 0,
+        errorCount: response.errorCount || 0,
+        warningCount: response.warningCount || 0,
+        resultsMessage: response.resultsMessage || [],
+        resultsStatus: response.resultsStatus || [],
+        message: response.message || "",
+      });
+      //The response is gonna have ok, error and warning inside, make an useState with those that has each empty by default and fill the data in here
     } catch (error) {
       console.error("Error al pujar l'arxiu:", error);
       alert("Error al pujar l'arxiu");
@@ -77,6 +94,74 @@ export default function InputCsv() {
         >
           Enviar arxiu
         </Button>
+
+        {responseData.message && (
+          <p>
+          Importació completada. Usuaris importats:{" "}
+          <span className="text-green-600 font-bold">
+            {responseData.imported}
+          </span>
+          . Errors:{" "}
+          <span className="text-red-600 font-bold">
+            {responseData.errorCount}
+          </span>
+          . Warnings:{" "}
+          <span className="text-yellow-600 font-bold">
+            {responseData.warningCount}
+          </span>
+          </p>
+        )}
+
+        {(responseData.resultsMessage.length > 0 ||
+          responseData.resultsStatus.length > 0 ||
+          responseData.imported > 0) && (
+          <div className="overflow-y-auto max-h-64">
+            <table className="table-auto border-collapse border border-gray-300 mt-4  bg-white">
+              <thead>
+                <tr>
+                  <th className="border border-gray-300 px-4 py-2">Línia</th>
+                  <th className="border border-gray-300 px-4 py-2">Missatge</th>
+                  <th className="border border-gray-300 px-4 py-2">Tipus</th>
+                </tr>
+              </thead>
+              <tbody>
+                {responseData.resultsMessage.map((error, index) => {
+                  const lineNumber = error.match(/\d+/)?.[0] || "N/A";
+                    const errorType =
+                    responseData.resultsStatus[index]?.toLowerCase() ===
+                    "warning"
+                      ? "Avís"
+                      : responseData.resultsStatus[index]?.toLowerCase() ===
+                      "success"
+                      ? "Èxit"
+                      : "Error";
+                    const textColor =
+                    errorType === "Avís"
+                      ? "text-yellow-600"
+                      : errorType === "Èxit"
+                      ? "text-green-600"
+                      : "text-red-600";
+
+                  return (
+                    <tr key={`error-${index}`}>
+                      <td className="border border-gray-300 px-4 py-2">
+                        {lineNumber}
+                      </td>
+                      <td className="border border-gray-300 px-4 py-2 text-left">
+                        {error}
+                      </td>
+                      <td
+                        className={`border border-gray-300 px-4 py-2 font-medium ${textColor}`}
+                      >
+                        {errorType}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
   );
