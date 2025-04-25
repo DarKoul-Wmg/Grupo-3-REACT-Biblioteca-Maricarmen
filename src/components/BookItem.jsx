@@ -8,6 +8,7 @@ export default function BookItem({
   resum = "Resum no disponible",
   modelType,
   isbn = "ISBN no disponible",
+  cdu = "CDU no disponible",
   editorial = "Editorial no disponible",
   colleccio = "Col·lecció no disponible",
   lloc = "Lloc no disponible",
@@ -26,6 +27,8 @@ export default function BookItem({
   productora = "Productora no disponible",
   marca = "Marca no disponible",
   model = "Model no disponible",
+  mides = "Mides no disponibles",
+  signatura = "Signatura no disponible",
 }) {
   return (
     <div className="flex bg-white dark:bg-[#141414] rounded-lg shadow-md overflow-hidden w-full max-w-4xl justify-evenly">
@@ -57,9 +60,9 @@ export default function BookItem({
             <strong>Autor:</strong> {author}
           </p>
         )}
-        {resum && (
+        {cdu && (
           <p className="text-sm text-gray-800 dark:text-white">
-            <strong>Resum:</strong> {resum}
+            <strong>CDU:</strong> {cdu}
           </p>
         )}
 
@@ -229,6 +232,22 @@ export default function BookItem({
               </p>
             )}
           </>
+        )}
+
+        {mides && (
+          <p className="text-sm text-gray-800 dark:text-white">
+            <strong>Mides:</strong> {mides}
+          </p>
+        )}
+        {signatura && (
+          <p className="text-sm text-gray-800 dark:text-white">
+            <strong>Signatura:</strong> {signatura}
+          </p>
+        )}
+        {resum && (
+          <p className="text-sm text-gray-800 dark:text-white">
+            <strong>Resum:</strong> {resum}
+          </p>
         )}
       </div>
     </div>

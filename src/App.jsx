@@ -38,6 +38,27 @@ export default function App() {
     setActiveSidebarComponent("BookDetails");
   };
 
+  const updateSelectedBook = () => {
+    if (!selectedBook || !selectedBook.id || !selectedBook.model_type) {
+      console.error("El libro seleccionado no es válido:", selectedBook);
+      return;
+    }
+
+    getItemById(selectedBook.id, selectedBook.model_type)
+      .then((response) => {
+        if (!response) {
+          console.error("No se pudo obtener la información del libro.");
+          return;
+        }
+
+        console.log("Respuesta actualización libro: ", response);
+        setSelectedExemplars(response.exemplars);
+      })
+      .catch((error) => {
+        console.error("Error al actualizar el libro:", error.message);
+      });
+  };
+
   const handleSearch = (search) => {
     console.log("Search results: ", search);
     setSearchResults(search);
@@ -95,26 +116,38 @@ export default function App() {
 
   const renderBookDetails = () => {
     if (!selectedBook) return null;
-    console.log("Selected book", selectedBook, selectedBook.model_type);
 
     return (
       <div className="m-4 items-center flex flex-col gap-3">
         <BookItem
+          marca={selectedBook.marca}
+          model={selectedBook.model}
+          estil={selectedBook.estil}
+          discografica={selectedBook.discografica}
+          productora={selectedBook.productora}
+          duracio={selectedBook.duracio}
+          issn={selectedBook.ISSN}
+          lloc={selectedBook.lloc}
+          colleccio={selectedBook.colleccio}
+          volums={selectedBook.volums}
+          numero={selectedBook.numero}
+          llengua={selectedBook.llengua}
           imageUrl={selectedBook.thumbnail_url}
           title={selectedBook.titol || selectedBook.title}
           originalTitle={selectedBook.originalTitle}
-          author={selectedBook.autor || selectedBook.subTitle}
+          author={selectedBook.autor}
           isbn={selectedBook.ISBN}
-          country={selectedBook.pais}
-          pages={selectedBook.pagines}
+          pais={selectedBook.pais}
+          pagines={selectedBook.pagines}
           editorial={selectedBook.editorial}
           cdu={selectedBook.cdu}
           signatura={selectedBook.signatura}
           dataEdicio={selectedBook.dataEdicio}
-          resum={selectedBook.description}
+          resum={selectedBook.resum}
           anotacions={selectedBook.anotacions}
           mides={selectedBook.mides}
           modelType={selectedBook.model_type || selectedBook.type}
+          updateBookDetails={updateSelectedBook}
         />
         {selectedExemplars && selectedExemplars.length >= 1 && (
           <ExemplarsTable
@@ -203,7 +236,11 @@ export default function App() {
       <Footer />
 
       {showLoanModal && (
-        <Modal loanDetails={loanBookDetails} onClose={closeModal} />
+        <Modal
+          loanDetails={loanBookDetails}
+          onClose={closeModal}
+          updateBookDetails={updateSelectedBook}
+        />
       )}
     </div>
   );

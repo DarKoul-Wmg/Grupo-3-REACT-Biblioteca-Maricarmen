@@ -9,7 +9,7 @@ export const ROLES = {
     colour: "bg-yellow-200",
     customText: "📖 Bibliotecari",
   },
-  Usuari: { role: "Usuari", colour: "bg-green-100", customText: "👤" },
+  Usuari: { role: "Usuari", colour: "bg-green-100", customText: "👤 Usuari" },
   Administrador: {
     role: "Administrador",
     colour: "bg-blue-200",

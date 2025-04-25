@@ -1,12 +1,20 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { searchUsers, insertLoan } from "../../services/api";
-import Toast from "./custom-toast";
+import { AuthContext } from "../../contexts/authcontext";
+import { useToast } from "../../contexts/toastcontext";
 
-export default function Modal({ loanDetails, onClose }) {
+export default function Modal({
+  loanDetails,
+  onClose,
+  updateBookDetails = () => {},
+}) {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-  const [selectedUser, setSelectedUser] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null); // Cambiado a null
   let searchTimeout;
+
+  const { userToken } = useContext(AuthContext);
+  const { addToast } = useToast(); // Hook para mostrar toasts
 
   const handleSearch = (query) => {
     setSearchQuery(query);
@@ -14,7 +22,7 @@ export default function Modal({ loanDetails, onClose }) {
     if (query.length > 2) {
       searchTimeout = setTimeout(async () => {
         try {
-          const results = await searchUsers(query);
+          const results = await searchUsers(query, userToken);
           console.log("User results: ", results);
           setSearchResults(results);
         } catch (error) {
@@ -28,27 +36,23 @@ export default function Modal({ loanDetails, onClose }) {
   };
 
   const handleUserSelect = (user) => {
-    setSelectedUser(user);
+    setSelectedUser(user); // Guardar el usuario seleccionado como objeto
     setSearchResults([]);
-    setSearchQuery(user.name);
+    setSearchQuery(""); // Limpiar el campo de búsqueda
   };
 
   const handleLoan = () => {
-    console.log("Préstec realitzat:", {
-      book: loanDetails,
-      user: selectedUser,
-      loanStart: new Date().toISOString().split("T")[0],
-      loanEnd: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-        .toISOString()
-        .split("T")[0],
-    });
-
     insertLoan(selectedUser.id, loanDetails.id)
       .then((response) => {
-        Toast.success(`Préstec realitzat correctament: ${response}`);
+        console.log("Response:", response);
+        addToast(
+          "success",
+          `Préstec realitzat correctament amb exemplar: ${response.exemplar}`
+        );
+        updateBookDetails();
       })
       .catch((error) => {
-        Toast.error(`ERROR: ${error}`);
+        addToast("error", `ERROR: ${error}`);
       });
 
     onClose();
@@ -60,15 +64,15 @@ export default function Modal({ loanDetails, onClose }) {
     .split("T")[0];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-      <div className="w-full max-w-lg bg-white rounded-xl shadow-lg overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm dark:text-white">
+      <div className="w-full max-w-lg bg-white dark:bg-[#282828] rounded-xl shadow-lg overflow-hidden">
         <div className="flex items-center justify-between p-4 border-b">
           <h3 className="text-lg font-semibold text-gray-800">
             Préstec de llibre
           </h3>
           <button
             onClick={onClose}
-            className="rounded-full p-1.5 hover:bg-gray-100 focus:outline-none"
+            className="rounded-full p-1.5 hover:bg-gray-100 focus:outline-none cursor-pointer"
           >
             <svg
               className="w-5 h-5 text-gray-600"
@@ -89,25 +93,29 @@ export default function Modal({ loanDetails, onClose }) {
 
         <div className="p-5 space-y-4">
           <div>
-            <h4 className="text-sm font-medium text-gray-500">Centre</h4>
-            <p className="text-base font-semibold text-gray-800">
+            <h4 className="text-sm font-medium text-gray-500 dark:text-white">
+              Centre
+            </h4>
+            <p className="text-base font-semibold text-gray-800 dark:text-white">
               {loanDetails?.centre?.nom}
             </p>
           </div>
           <div>
-            <h4 className="text-sm font-medium text-gray-500">
+            <h4 className="text-sm font-medium text-gray-500 dark:text-white">
               <strong>Llibre a prestar: </strong>
               {loanDetails?.bookTitle || "Títol del llibre"}
             </h4>
-            <p className="text-base font-semibold text-gray-800">
+            <p className="text-base font-semibold text-gray-800 dark:text-white">
               {loanDetails?.nom}
             </p>
           </div>
 
-          <div className="flex items-center justify-between gap-2 bg-gray-50 p-4 rounded-md">
+          <div className="flex items-center justify-between gap-2 bg-gray-50 dark:bg-[#141414] p-4 rounded-md">
             <div className="">
-              <p className="text-xs text-gray-500">Inici</p>
-              <p className="text-base font-medium text-gray-700">{loanStart}</p>
+              <p className="text-xs text-gray-500 dark:text-white">Inici</p>
+              <p className="text-base font-medium text-gray-700 dark:text-white">
+                {loanStart}
+              </p>
             </div>
             <div className="text-gray-400">
               <svg
@@ -126,37 +134,40 @@ export default function Modal({ loanDetails, onClose }) {
               </svg>
             </div>
             <div className="text-center">
-              <p className="text-xs text-gray-500">Fi previst de préstec</p>
-              <p className="text-base font-medium text-gray-700">{loanEnd}</p>
+              <p className="text-xs text-gray-500 dark:text-white">
+                Fi previst de préstec
+              </p>
+              <p className="text-base font-medium text-gray-700 dark:text-white">
+                {loanEnd}
+              </p>
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1 dark:text-white">
               Cerca d'usuari
             </label>
             <div className="relative">
               <input
                 type="text"
                 value={
-                  selectedUser && selectedUser.length > 0
-                    ? `${selectedUser[0].first_name} ${selectedUser[0].last_name}`
+                  selectedUser
+                    ? `${selectedUser.first_name} ${selectedUser.last_name}`
                     : searchQuery
                 }
                 onChange={(e) => {
-                  if (!selectedUser || selectedUser.length === 0)
-                    handleSearch(e.target.value);
+                  if (!selectedUser) handleSearch(e.target.value);
                 }}
-                className="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                className="w-full rounded-md border-gray-300  dark:ring-white dark:focus:border-white dark:focus:ring-white shadow-sm focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Buscar per nom/cognom/tfn"
-                disabled={selectedUser && selectedUser.length > 0} // Deshabilitar el input si hay un usuario seleccionado
+                disabled={!!selectedUser} // Deshabilitar el input si hay un usuario seleccionado
               />
-              {selectedUser && selectedUser.length > 0 && (
+              {selectedUser && (
                 <button
                   onClick={() => {
-                    setSelectedUser([]); // Limpiar la selección del usuario
-                    setSearchQuery("");
-                    setSearchResults([]);
+                    setSelectedUser(null); // Limpiar el usuario seleccionado
+                    setSearchQuery(""); // Limpiar el campo de búsqueda
+                    setSearchResults([]); // Limpiar los resultados de búsqueda
                   }}
                   className="absolute cursor-pointer right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
                 >
@@ -164,13 +175,13 @@ export default function Modal({ loanDetails, onClose }) {
                 </button>
               )}
             </div>
-            {selectedUser.length === 0 && searchResults.length > 0 && (
+            {!selectedUser && searchResults.length > 0 && (
               <ul className="mt-2 max-h-40 overflow-y-auto border border-gray-200 rounded-md divide-y">
                 {searchResults.map((user) => (
                   <li
                     key={user.id}
-                    onClick={() => setSelectedUser(user)}
-                    className="p-2 hover:bg-blue-50 cursor-pointer text-sm"
+                    onClick={() => handleUserSelect(user)}
+                    className="p-2 hover:bg-blue-50 cursor-pointer text-sm dark:hover:text-black"
                   >
                     {user.first_name} {user.last_name}
                   </li>
@@ -183,7 +194,7 @@ export default function Modal({ loanDetails, onClose }) {
         <div className="flex justify-end items-center gap-2 p-4 border-t">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+            className="px-4 py-2 text-sm font-medium cursor-pointer text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
           >
             Cancel·lar
           </button>
@@ -192,7 +203,7 @@ export default function Modal({ loanDetails, onClose }) {
             disabled={!selectedUser}
             className={`px-4 py-2 text-sm font-medium text-white rounded-lg shadow-sm transition-colors ${
               selectedUser
-                ? "bg-blue-600 hover:bg-blue-700"
+                ? "bg-blue-600 hover:bg-blue-700  cursor-pointer"
                 : "bg-gray-300 cursor-not-allowed"
             }`}
           >

@@ -4,6 +4,7 @@ import App from "./App";
 import { AuthProvider } from "./contexts/authcontext";
 import { ThemeProvider, ThemeContext } from "./contexts/themecontext";
 import "./index.css";
+import { ToastProvider } from "./contexts/toastcontext";
 
 // Un wrapper para inyectar la clase dark directamente en el #root
 function AppWithTheme() {
@@ -19,7 +20,9 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AuthProvider>
       <ThemeProvider>
-        <AppWithTheme />
+        <ToastProvider>
+          <AppWithTheme />
+        </ToastProvider>
       </ThemeProvider>
     </AuthProvider>
   </StrictMode>
