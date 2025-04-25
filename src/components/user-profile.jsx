@@ -8,6 +8,7 @@ export default function UserProfile({
   image,
   role,
 }) {
+  console.log("ROLE", role);
   return (
     <div className="flex flex-col items-center gap-4 mb-6 p-5">
       <div className="w-40 h-40 rounded-full bg-gray-100 flex flex-col items-center justify-center overflow-hidden">
@@ -29,10 +30,10 @@ export default function UserProfile({
       </div>
       <div className="flex flex-col items-start">
         <div className="flex items-center gap-3">
-          <h1 className="text-3xl truncate max-w-65">
+          <p className="text-3xl truncate max-w-65 dark:text-white text-black  ">
             {firstName} {lastName}
-          </h1>
-          <Badge role={role[0]} className="custom-class" />
+          </p>
+          <Badge type="role" value={role[0]} />
         </div>
         <h2 className="text-sm text-gray-500">{school}</h2>
       </div>

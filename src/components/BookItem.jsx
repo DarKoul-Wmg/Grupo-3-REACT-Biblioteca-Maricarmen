@@ -1,26 +1,39 @@
 import React from "react";
+import Badge from "./ui/badge";
 
 export default function BookItem({
   imageUrl = "",
   title = "Títol desconegut",
-  originalTitle = "",
   author = "Autor desconegut",
-  isbn = "ISBN no disponible",
-  country = "País no disponible",
-  pages = "Pàgines no disponibles",
-  editorial = "Editorial no disponible",
-  cdu = "CDU no disponible",
-  signatura = "Signatura no disponible",
-  dataEdicio = "Data d’edició no disponible",
   resum = "Resum no disponible",
-  anotacions = "Anotacions no disponibles",
+  modelType,
+  isbn = "ISBN no disponible",
+  cdu = "CDU no disponible",
+  editorial = "Editorial no disponible",
+  colleccio = "Col·lecció no disponible",
+  lloc = "Lloc no disponible",
+  pais = "País no disponible",
+  llengua = "Llengua no disponible",
+  numero = "Número no disponible",
+  volums = "Volums no disponibles",
+  pagines = "Pàgines no disponibles",
+  infoUrl = "",
+  previewUrl = "",
+  thumbnailUrl = "Miniatura no disponible",
+  issn = "ISSN no disponible",
+  discografica = "Discogràfica no disponible",
+  estil = "Estil no disponible",
+  duracio = "Duració no disponible",
+  productora = "Productora no disponible",
+  marca = "Marca no disponible",
+  model = "Model no disponible",
   mides = "Mides no disponibles",
-  tags = [],
+  signatura = "Signatura no disponible",
 }) {
   return (
-    <div className="flex bg-white rounded-lg shadow-md overflow-hidden w-full max-w-4xl">
-      {/* Imatge del llibre */}
-      <div className="w-1/3 bg-gray-200 flex items-center justify-center p-4">
+    <div className="flex bg-white dark:bg-[#141414] rounded-lg shadow-md overflow-hidden w-full max-w-4xl justify-evenly">
+      {/* Imatge del contingut */}
+      <div className="w-1/3 bg-gray-200 dark:bg-gray-800 flex items-center justify-center p-4">
         {imageUrl ? (
           <img
             src={imageUrl}
@@ -28,82 +41,213 @@ export default function BookItem({
             className="object-cover h-48 rounded-md"
           />
         ) : (
-          <span className="text-black text-lg">Imatge del llibre</span>
+          <span className="text-black dark:text-white text-lg">
+            Imatge no disponible
+          </span>
         )}
       </div>
 
-      {/* Detalls del llibre */}
-      <div className="w-2/3 p-6 flex flex-col justify-start gap-2">
-        <h2 className="text-2xl font-semibold text-gray-800">{title}</h2>
-        {originalTitle && (
-          <p className="text-gray-700 text-sm italic">
-            <strong>Títol original:</strong> {originalTitle}
-          </p>
-        )}
+      {/* Detalls del contingut */}
+      <div className="p-6 flex flex-col justify-start gap-2 text-start">
+        <div className="flex gap-3 items-center">
+          <h2 className="text-2xl font-semibold text-gray-800 dark:text-white">
+            {title}
+          </h2>
+          <Badge type="type" value={modelType}></Badge>
+        </div>
         {author && (
-          <p className="text-lg text-gray-700 font-medium">{author}</p>
-        )}
-        {isbn && (
-          <p className="text-sm">
-            <strong>ISBN:</strong> {isbn}
-          </p>
-        )}
-        {country && (
-          <p className="text-sm">
-            <strong>País:</strong> {country}
-          </p>
-        )}
-        {pages && (
-          <p className="text-sm">
-            <strong>Nombre de pàgines:</strong> {pages}
-          </p>
-        )}
-        {editorial && (
-          <p className="text-sm">
-            <strong>Editorial:</strong> {editorial}
+          <p className="text-lg text-gray-700 dark:text-white font-medium">
+            <strong>Autor:</strong> {author}
           </p>
         )}
         {cdu && (
-          <p className="text-sm">
+          <p className="text-sm text-gray-800 dark:text-white">
             <strong>CDU:</strong> {cdu}
           </p>
         )}
-        {signatura && (
-          <p className="text-sm">
-            <strong>Signatura:</strong> {signatura}
-          </p>
+
+        {/* Mostrar campos específicos según el tipo */}
+        {modelType === "Llibre" && (
+          <>
+            {isbn && (
+              <p className="text-sm text-gray-800 dark:text-white">
+                <strong>ISBN:</strong> {isbn}
+              </p>
+            )}
+            {editorial && (
+              <p className="text-sm text-gray-800 dark:text-white">
+                <strong>Editorial:</strong> {editorial}
+              </p>
+            )}
+            {colleccio && (
+              <p className="text-sm text-gray-800 dark:text-white">
+                <strong>Col·lecció:</strong> {colleccio}
+              </p>
+            )}
+            {lloc && (
+              <p className="text-sm text-gray-800 dark:text-white">
+                <strong>Lloc:</strong> {lloc}
+              </p>
+            )}
+            {pais && (
+              <p className="text-sm text-gray-800 dark:text-white">
+                <strong>País:</strong> {pais}
+              </p>
+            )}
+            {llengua && (
+              <p className="text-sm text-gray-800 dark:text-white">
+                <strong>Llengua:</strong> {llengua}
+              </p>
+            )}
+            {numero && (
+              <p className="text-sm text-gray-800 dark:text-white">
+                <strong>Número:</strong> {numero}
+              </p>
+            )}
+            {volums && (
+              <p className="text-sm text-gray-800 dark:text-white">
+                <strong>Volums:</strong> {volums}
+              </p>
+            )}
+            {pagines && (
+              <p className="text-sm text-gray-800 dark:text-white">
+                <strong>Pàgines:</strong> {pagines}
+              </p>
+            )}
+            {infoUrl && (
+              <p className="text-sm text-gray-800 dark:text-white">
+                <strong>Info URL:</strong>{" "}
+                <a
+                  href={infoUrl}
+                  className="text-blue-500 dark:text-blue-400 hover:underline"
+                >
+                  {infoUrl}
+                </a>
+              </p>
+            )}
+            {previewUrl && (
+              <p className="text-sm text-gray-800 dark:text-white">
+                <strong>Preview URL:</strong>{" "}
+                <a
+                  href={previewUrl}
+                  className="text-blue-500 dark:text-blue-400 hover:underline"
+                >
+                  {previewUrl}
+                </a>
+              </p>
+            )}
+          </>
         )}
-        {dataEdicio && (
-          <p className="text-sm">
-            <strong>Data d’edició:</strong> {dataEdicio}
-          </p>
+
+        {modelType === "Revista" && (
+          <>
+            {issn && (
+              <p className="text-sm text-gray-800 dark:text-white">
+                <strong>ISSN:</strong> {issn}
+              </p>
+            )}
+            {editorial && (
+              <p className="text-sm text-gray-800 dark:text-white">
+                <strong>Editorial:</strong> {editorial}
+              </p>
+            )}
+            {lloc && (
+              <p className="text-sm text-gray-800 dark:text-white">
+                <strong>Lloc:</strong> {lloc}
+              </p>
+            )}
+            {pais && (
+              <p className="text-sm text-gray-800 dark:text-white">
+                <strong>País:</strong> {pais}
+              </p>
+            )}
+            {llengua && (
+              <p className="text-sm text-gray-800 dark:text-white">
+                <strong>Llengua:</strong> {llengua}
+              </p>
+            )}
+            {numero && (
+              <p className="text-sm text-gray-800 dark:text-white">
+                <strong>Número:</strong> {numero}
+              </p>
+            )}
+            {volums && (
+              <p className="text-sm text-gray-800 dark:text-white">
+                <strong>Volums:</strong> {volums}
+              </p>
+            )}
+            {pagines && (
+              <p className="text-sm text-gray-800 dark:text-white">
+                <strong>Pàgines:</strong> {pagines}
+              </p>
+            )}
+          </>
         )}
+
+        {modelType === "CD" && (
+          <>
+            {discografica && (
+              <p className="text-sm text-gray-800 dark:text-white">
+                <strong>Discogràfica:</strong> {discografica}
+              </p>
+            )}
+            {estil && (
+              <p className="text-sm text-gray-800 dark:text-white">
+                <strong>Estil:</strong> {estil}
+              </p>
+            )}
+            {duracio && (
+              <p className="text-sm text-gray-800 dark:text-white">
+                <strong>Duració:</strong> {duracio}
+              </p>
+            )}
+          </>
+        )}
+
+        {(modelType === "DVD" || modelType === "BR") && (
+          <>
+            {productora && (
+              <p className="text-sm text-gray-800 dark:text-white">
+                <strong>Productora:</strong> {productora}
+              </p>
+            )}
+            {duracio && (
+              <p className="text-sm text-gray-800 dark:text-white">
+                <strong>Duració:</strong> {duracio}
+              </p>
+            )}
+          </>
+        )}
+
+        {modelType === "Dispositiu" && (
+          <>
+            {marca && (
+              <p className="text-sm text-gray-800 dark:text-white">
+                <strong>Marca:</strong> {marca}
+              </p>
+            )}
+            {model && (
+              <p className="text-sm text-gray-800 dark:text-white">
+                <strong>Model:</strong> {model}
+              </p>
+            )}
+          </>
+        )}
+
         {mides && (
-          <p className="text-sm">
+          <p className="text-sm text-gray-800 dark:text-white">
             <strong>Mides:</strong> {mides}
           </p>
         )}
+        {signatura && (
+          <p className="text-sm text-gray-800 dark:text-white">
+            <strong>Signatura:</strong> {signatura}
+          </p>
+        )}
         {resum && (
-          <p className="text-sm">
+          <p className="text-sm text-gray-800 dark:text-white">
             <strong>Resum:</strong> {resum}
           </p>
-        )}
-        {anotacions && (
-          <p className="text-sm">
-            <strong>Anotacions:</strong> {anotacions}
-          </p>
-        )}
-        {tags.length > 0 && (
-          <div className="mt-2 flex flex-wrap gap-1">
-            {tags.map((tag, index) => (
-              <span
-                key={index}
-                className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
         )}
       </div>
     </div>

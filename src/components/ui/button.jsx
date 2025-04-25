@@ -6,7 +6,8 @@ export default function Button({
   ...props
 }) {
   const baseStyles =
-    "justify-center py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg focus:outline-none disabled:opacity-50 cursor-pointer ";
+    "justify-center py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg focus:outline-none disabled:opacity-50 cursor-pointer " +
+    "dark:bg-[#282828] dark:text-white dark:hover:bg-[#3c3c3c] dark:focus:bg-[#3c3c3c] dark:placeholder-gray-400";
 
   const variantStyles = {
     default: "bg-blue-600 text-white hover:bg-blue-700 focus:bg-blue-700",

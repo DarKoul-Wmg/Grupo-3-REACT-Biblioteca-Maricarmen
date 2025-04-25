@@ -27,12 +27,15 @@ export default function SignIn() {
   };
 
   return (
-    <div className="flex w-full h-full items-center justify-center flex-col gap-6 p-4">
-      <Card className="w-full max-w-md">
-        <form className="p-6 flex flex-col gap-4" onSubmit={handleLogin}>
-          <h1 className="w-full text-center font-bold text-xl">
+    <div className="flex w-full h-full items-center justify-center flex-col gap-6 p-4 bg-blue-100 dark:bg-[#141414]">
+      <Card className="w-full max-w-md dark:bg-[#282828]">
+        <form
+          className="p-6 flex flex-col gap-4 dark:text-white"
+          onSubmit={handleLogin}
+        >
+          <p className="w-full text-center font-bold text-xl dark:text-white text-black">
             Inicia Sessió
-          </h1>
+          </p>
 
           <div className="flex flex-col gap-4">
             <Input
@@ -43,6 +46,7 @@ export default function SignIn() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              className="dark:bg-[#3c3c3c] dark:text-white dark:placeholder:text-white"
             />
             <Input
               label="Contrasenya"
@@ -52,14 +56,19 @@ export default function SignIn() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              className="dark:bg-[#3c3c3c] dark:text-white dark:placeholder:text-white"
             />
             <div className="flex justify-end">
-              <Button type="submit" className="w-full sm:w-2/4">
+              <Button type="submit" variant="outline">
                 Inicia Sessió
               </Button>
             </div>
           </div>
-          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+          {error && (
+            <p className="text-red-500 text-sm text-center dark:text-red-400">
+              {error}
+            </p>
+          )}
         </form>
       </Card>
     </div>
