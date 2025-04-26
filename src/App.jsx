@@ -12,6 +12,7 @@ import InputCsv from "./components/InputCsv";
 import ExemplarsTable from "./components/ExemplarsTable";
 import UserForm from "./components/user-form";
 import { getBookById } from "./services/api";
+import LoanHistoryTable from "./components/LoanHistoryTable";
 
 export default function App() {
   const { user, activeComponent, login } = useContext(AuthContext);
@@ -106,11 +107,9 @@ export default function App() {
           return <UserForm />;
         case "FileUpload":
           return <InputCsv />;
-        case "MyLoans":
+        case "LoanHistoryTable":
           return (
-            <h1 className="text-2xl font-bold text-center">
-              Els meus préstecs
-            </h1>
+            <LoanHistoryTable />
           );
         case "BookDetails":
           return renderBookDetails();

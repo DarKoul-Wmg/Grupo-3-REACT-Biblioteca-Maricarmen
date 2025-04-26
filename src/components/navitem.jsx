@@ -36,6 +36,24 @@ export function FileIcon() {
   );
 }
 
+export function BookIcon() {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      stroke="black"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="M3.5 16.5V5.5A2 2 0 0 1 5.5 3.5H10V16.5H5.5A2 2 0 0 1 3.5 16.5Z" />
+      <path d="M16.5 16.5V5.5A2 2 0 0 0 14.5 3.5H10V16.5H14.5A2 2 0 0 0 16.5 16.5Z" />
+    </svg>
+  );
+}
+
 export default function SidebarNavigation({ onSidebarClick }) {
   const { user } = useContext(AuthContext);
 
@@ -54,9 +72,9 @@ export default function SidebarNavigation({ onSidebarClick }) {
       roles: ["Bibliotecari", "Administrador"],
     },
     {
-      icon: <FileIcon />,
+      icon: <BookIcon />,
       label: "Els meus préstecs",
-      component: "MyLoans",
+      component: "LoanHistoryTable",
       roles: ["Usuari", "Bibliotecari", "Administrador"],
     },
   ];
