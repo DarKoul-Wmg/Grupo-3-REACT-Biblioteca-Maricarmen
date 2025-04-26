@@ -5,8 +5,8 @@ import { AuthContext } from "../contexts/authcontext";
 export function UserIcon() {
   return (
     <svg
-      width="20"
-      height="20"
+      width="24"
+      height="24"
       viewBox="0 0 20 20"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -23,8 +23,8 @@ export function UserIcon() {
 export function FileIcon() {
   return (
     <svg
-      width="20"
-      height="20"
+      width="24"
+      height="24"
       viewBox="0 0 20 20"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -34,6 +34,25 @@ export function FileIcon() {
         d="M10.6667 3.33337H6C5.64638 3.33337 5.30724 3.47385 5.05719 3.7239C4.80714 3.97395 4.66667 4.31309 4.66667 4.66671V15.3334C4.66667 15.687 4.80714 16.0261 5.05719 16.2762C5.30724 16.5262 5.64638 16.6667 6 16.6667H14C14.3536 16.6667 14.6928 16.5262 14.9428 16.2762C15.1929 16.0261 15.3333 15.687 15.3333 15.3334V8.00004M10.6667 3.33337L15.3333 8.00004M10.6667 3.33337V8.00004H15.3333"
         stroke="black"
       />
+    </svg>
+  );
+}
+
+export function BookIcon() {
+  return (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 20 20"
+      fill="none"
+      stroke="black"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      xmlns="http://www.w3.org/2000/svg"
+      className=" dark:fill-white"
+    >
+      <path d="M3.5 16.5V5.5A2 2 0 0 1 5.5 3.5H10V16.5H5.5A2 2 0 0 1 3.5 16.5Z" />
+      <path d="M16.5 16.5V5.5A2 2 0 0 0 14.5 3.5H10V16.5H14.5A2 2 0 0 0 16.5 16.5Z" />
     </svg>
   );
 }
@@ -56,9 +75,9 @@ export default function SidebarNavigation({ onSidebarClick }) {
       roles: ["Bibliotecari", "Administrador"],
     },
     {
-      icon: <FileIcon />,
+      icon: <BookIcon />,
       label: "Els meus préstecs",
-      component: "MyLoans",
+      component: "LoanHistoryTable",
       roles: ["Usuari", "Bibliotecari", "Administrador"],
     },
   ];
@@ -80,7 +99,7 @@ export default function SidebarNavigation({ onSidebarClick }) {
                 onClick={() => {
                   onSidebarClick(component);
                 }}
-                className="w-full flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 dark:text-white rounded-lg hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 cursor-pointer dark:fill-white"
+                className="w-full flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 dark:text-white rounded-lg hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 cursor-pointer dark:fill-white  hover:dark:text-black"
               >
                 {icon}
                 {label}

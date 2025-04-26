@@ -14,6 +14,7 @@ import UserForm from "./components/user-form";
 import { getItemById } from "./services/api";
 import { searchItem } from "./services/api";
 import { useTransition } from "react";
+import LoanHistoryTable from "./components/LoanHistoryTable";
 import Modal from "./components/ui/modal";
 
 export default function App() {
@@ -168,11 +169,9 @@ export default function App() {
           return <UserForm />;
         case "FileUpload":
           return <InputCsv />;
-        case "MyLoans":
+        case "LoanHistoryTable":
           return (
-            <h1 className="text-2xl font-bold text-center">
-              Els meus préstecs
-            </h1>
+            <LoanHistoryTable />
           );
         case "BookDetails":
           return renderBookDetails();

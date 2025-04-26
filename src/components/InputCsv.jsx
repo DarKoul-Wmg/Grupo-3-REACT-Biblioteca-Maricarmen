@@ -71,7 +71,7 @@ export default function InputCsv() {
 
           <label
             htmlFor="fileInput"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 mb-8 rounded-md cursor-pointer w-50 text-center dark:bg-[#282828] dark:hover:bg-[#3c3c3c] dark:text-white"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 mb-8 rounded-md cursor-pointer w-50 text-center dark:hover:bg-[#3c3c3c] dark:text-white"
           >
             Seleccionar un arxiu
           </label>

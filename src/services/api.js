@@ -162,13 +162,36 @@ export async function searchItem(queryText, page = 1) {
     throw err;
   }
 }
+
+export async function getLoanHistory(userToken) {
+  try {
+    console.log("Token de usuario:", userToken); // Verifica el token recibido
+    const response = await fetch(`${API_URL}prestecs/historial`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Error fetching loan history");
+    }
+
+    const data = await response.json();
+    return data; // Retorna prestamos del usuario
+  } catch (error) {
+    console.error("Error in getLoanHistory:", error.message);
+    throw error;
+  }
+}
+
 export async function searchUsers(textQuery, userToken) {
   console.log("usertoken", userToken);
   try {
     const response = await fetch(`${API_URL}usuaris/${textQuery}`, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${userToken}`, // Enviar las credenciales en el encabezado
+        Authorization: `Bearer ${userToken}`,
       },
     });
 
