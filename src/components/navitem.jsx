@@ -5,8 +5,8 @@ import { AuthContext } from "../contexts/authcontext";
 export function UserIcon() {
   return (
     <svg
-      width="20"
-      height="20"
+      width="24"
+      height="24"
       viewBox="0 0 20 20"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -23,8 +23,8 @@ export function UserIcon() {
 export function FileIcon() {
   return (
     <svg
-      width="20"
-      height="20"
+      width="24"
+      height="24"
       viewBox="0 0 20 20"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -41,14 +41,15 @@ export function FileIcon() {
 export function BookIcon() {
   return (
     <svg
-      width="20"
-      height="20"
+      width="24"
+      height="24"
       viewBox="0 0 20 20"
       fill="none"
       stroke="black"
       strokeLinecap="round"
       strokeLinejoin="round"
       xmlns="http://www.w3.org/2000/svg"
+      className=" dark:fill-white"
     >
       <path d="M3.5 16.5V5.5A2 2 0 0 1 5.5 3.5H10V16.5H5.5A2 2 0 0 1 3.5 16.5Z" />
       <path d="M16.5 16.5V5.5A2 2 0 0 0 14.5 3.5H10V16.5H14.5A2 2 0 0 0 16.5 16.5Z" />
@@ -98,7 +99,7 @@ export default function SidebarNavigation({ onSidebarClick }) {
                 onClick={() => {
                   onSidebarClick(component);
                 }}
-                className="w-full flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 dark:text-white rounded-lg hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 cursor-pointer dark:fill-white"
+                className="w-full flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 dark:text-white rounded-lg hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 cursor-pointer dark:fill-white  hover:dark:text-black"
               >
                 {icon}
                 {label}
