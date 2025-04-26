@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef, useTransition } from "react";
 import Button from "./ui/button";
-import { getBooks, getBookById, searchBook } from "../services/api";
+import { getBooks, getItemById, searchItem } from "../services/api";
 
 export default function SearchBar({
-  placeholder = "Busca un llibre / autor",
-  className = "text-black",
+  placeholder = "Busca un item / autor",
+  className = "text-black dark:text-white",
   onBookSelect,
   onSearch,
   setSelectedExemplars,
@@ -26,10 +26,10 @@ export default function SearchBar({
 
       let active = true;
 
-      searchBook(searchQuery).then((books) => {
+      searchItem(searchQuery).then((books) => {
         if (!active) return;
 
-        const items = books.results.length > 0 ? books.results.slice(0, 5) : []; // Obtener los primeros 5 libros o vacío si no hay resultados
+        const items = books.results.length > 0 ? books.results.slice(0, 5) : [];
 
         setFilteredItems(items);
         setIsOpen(true);
@@ -54,7 +54,7 @@ export default function SearchBar({
   }, []);
 
   const handleBookClick = (book) => {
-    getBookById(book.id).then((value) => {
+    getItemById(book.id, book.type).then((value) => {
       setSelectedExemplars(value.exemplars);
 
       onBookSelect?.(value);
@@ -67,7 +67,7 @@ export default function SearchBar({
 
     setIsLoading(() => {
       if (searchQuery != "") {
-        searchBook(searchQuery).then((books) => {
+        searchItem(searchQuery).then((books) => {
           if (books) {
             onSearch?.(books);
           } else {
@@ -99,15 +99,15 @@ export default function SearchBar({
           placeholder={placeholder}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="py-2.5 sm:py-3 ps-10 pe-4 w-full border border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500"
+          className="py-2.5 sm:py-3 ps-10 pe-4 w-full border border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-800 bg-white dark:border-gray-700 dark:text-white text-black"
           autoComplete="off"
           spellCheck="false"
         />
-        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 pointer-events-none">
           🔍
         </div>
         {isOpen && (
-          <div className="absolute z-50 w-full bg-white mt-1 rounded-xl shadow-xl">
+          <div className="absolute z-50 w-full bg-white dark:bg-gray-800 mt-1 rounded-xl shadow-xl">
             {filteredItems.length > 0 ? (
               filteredItems.map((item) => (
                 <button
@@ -115,7 +115,7 @@ export default function SearchBar({
                   type="button"
                   onMouseDown={(e) => e.preventDefault()}
                   onClick={() => handleBookClick(item)}
-                  className="w-full text-left px-4 py-2 hover:bg-gray-100 flex justify-between items-center cursor-pointer"
+                  className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 flex justify-between items-center cursor-pointer dark:text-white"
                 >
                   <span>
                     {item.titol
@@ -129,7 +129,7 @@ export default function SearchBar({
                       )}
                   </span>
                   {item.autor && (
-                    <span className="text-xs text-gray-500">
+                    <span className="text-xs text-gray-500 dark:text-gray-400">
                       {item.autor
                         .split(new RegExp(`(${searchQuery})`, "gi"))
                         .map((part, index) =>
@@ -144,8 +144,8 @@ export default function SearchBar({
                 </button>
               ))
             ) : (
-              <div className="w-full text-left px-4 py-2 text-gray-500">
-                No s'han trobat llibres / autors
+              <div className="w-full text-left px-4 py-2 text-gray-500 dark:text-gray-400 ">
+                No s'han trobat items
               </div>
             )}
           </div>
@@ -153,7 +153,7 @@ export default function SearchBar({
       </div>
       <Button
         type="submit"
-        className="text-sm"
+        className="text-sm dark:text-white"
         onMouseDown={(e) => e.preventDefault()}
         loading={isLoading}
       >

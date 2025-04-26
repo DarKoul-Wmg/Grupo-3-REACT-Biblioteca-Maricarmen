@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { importCsv } from "../services/api";
+import Button from "./ui/button";
 
 export default function InputCsv() {
   const [file, setFile] = useState(null);
@@ -53,10 +54,10 @@ export default function InputCsv() {
   }
 
   return (
-    <div className="w-full flex items-center justify-center">
+    <div className="w-full flex items-center justify-center dark:bg-[#282828] bg-blue-100">
       <div className="flex items-center justify-center flex-col gap-4">
         <div className="flex items-center justify-center flex-col gap-2">
-          <label className="text-sm font-medium text-gray-700">
+          <label className="text-sm font-medium text-gray-700 dark:text-white">
             Selecciona un arxiu CSV:
           </label>
           {/* Se oculta el input por defecto y los estilos del navegador*/}
@@ -70,29 +71,29 @@ export default function InputCsv() {
 
           <label
             htmlFor="fileInput"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 mb-8 rounded-md cursor-pointer w-50 text-center"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 mb-8 rounded-md cursor-pointer w-50 text-center dark:bg-[#282828] dark:hover:bg-[#3c3c3c] dark:text-white"
           >
             Seleccionar un arxiu
           </label>
           {file ? (
-            <p className="text-sm text-green-600 ">
+            <p className="text-sm text-green-600 dark:text-green-400">
               Arxiu seleccionat: <strong>{file.name}</strong>
             </p>
           ) : (
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
               No s'ha seleccionat cap arxiu
             </p>
           )}
         </div>
 
-        <button
+        <Button
           onClick={handleUpload}
           disabled={!file}
-          className={`bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md w-fit 
-                        ${!file ? "opacity-50 cursor-not-allowed" : ""}`}
+          variant="outline"
+          className={`${!file ? "!cursor-not-allowed" : ""}`}
         >
           Enviar arxiu
-        </button>
+        </Button>
 
         {responseData.message && (
           <p>
@@ -165,9 +166,3 @@ export default function InputCsv() {
     </div>
   );
 }
-
-// response = {
-//     "ok": "Se han importado 9 entradas correctamente",
-//     "error": "Han fallado 3 regsitros, revisa las lineas 2, 7 y 9",
-//     "warning": "Las entradas 1, 3 y 5 ya existen en la base de datos",
-// };
