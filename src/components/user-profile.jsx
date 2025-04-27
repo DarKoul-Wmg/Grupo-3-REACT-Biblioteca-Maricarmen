@@ -8,9 +8,10 @@ export default function UserProfile({
   image,
   role,
 }) {
+  console.log("ROLE", role);
   return (
-    <div className="flex items-center gap-4 mb-6">
-      <div className="w-40 h-40 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
+    <div className=" w-1/3 flex flex-col items-center gap-4 mb-6 p-2">
+      <div className="w-40 h-40 rounded-full bg-gray-100 flex flex-col items-center justify-center overflow-hidden">
         {image ? (
           <img
             src={image}
@@ -27,16 +28,12 @@ export default function UserProfile({
           </svg>
         )}
       </div>
-      <div className="flex flex-col items-start">
-        <div className="flex items-center">
-          <h1 className="text-3xl truncate max-w-65">
+      <div className="flex flex-col items-start w-full">
+        <div className=" mx-auto flex items-center gap-3 w-full">
+          <p className="text-3xl truncate max-w-65 dark:text-white text-black  ">
             {firstName} {lastName}
-          </h1>
-          {role.map((singleRole, index) => (
-            <Badge key={index} className="custom-class">
-              {singleRole}
-            </Badge>
-          ))}
+          </p>
+          <Badge type="role" value={role[0]} />
         </div>
         <h2 className="text-sm text-gray-500">{school}</h2>
       </div>
