@@ -9,6 +9,8 @@ export default function LoanHistoryTable() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
+  
+
   useEffect(() => {
     async function fetchLoanHistory() {
       try {
@@ -32,11 +34,27 @@ export default function LoanHistoryTable() {
         Inicia sessió un altre cop per veure el teu historial de préstecs.
       </div>
     );
-  if (loading) return <div>Carregant historial de préstecs...</div>;
-  if (!loanHistory.length) return <div>No hi ha historial de préstecs.</div>;
+  if (loading) return <div className="dark:text-white">Carregant historial de préstecs...</div>;
+  if (!loanHistory.length) return <div className="dark:text-white">No hi ha historial de préstecs.</div>;
 
-  // Paginación
+  // PAGINADOR
   const totalPages = Math.ceil(loanHistory.length / itemsPerPage);
+
+  // --- PAGINADOR DINÁMICO ---
+  const maxPagesToShow = 5;
+  let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+  let endPage = startPage + maxPagesToShow - 1;
+
+  if (endPage > totalPages) {
+    endPage = totalPages;
+    startPage = Math.max(1, endPage - maxPagesToShow + 1);
+  }
+
+  const pageNumbers = [];
+  for (let i = startPage; i <= endPage; i++) {
+    pageNumbers.push(i);
+  }
+
   const paginatedData = [...loanHistory]
     .sort((a, b) => {
       const now = new Date();
@@ -178,17 +196,18 @@ export default function LoanHistoryTable() {
           >
             ‹
           </button>
-          {Array.from({ length: totalPages }, (_, index) => (
+          {/* CAMBIO: solo mostramos los botones de las páginas calculadas */}
+          {pageNumbers.map((page) => (
             <button
-              key={index + 1}
-              onClick={() => setCurrentPage(index + 1)}
+              key={page}
+              onClick={() => setCurrentPage(page)}
               className={`mx-1 px-3 py-1 text-xl rounded-md transition-all cursor-pointer ${
-                currentPage === index + 1
+                currentPage === page
                   ? "bg-blue-700 text-white border-[#8B8EF9] dark:bg-blue-500 dark:border-[#8B8EF9]"
                   : "bg-blue-500 text-white border-gray-300 hover:bg-blue-300 dark:bg-[#3c3c3c] dark:border-[#3c3c3c] dark:hover:bg-[#282828]"
               }`}
             >
-              {index + 1}
+              {page}
             </button>
           ))}
           <button

@@ -20,6 +20,21 @@ export default function ExemplarsTable({ array, user, onLoanClick }) {
     setCurrentPage(page);
   };
 
+  // ---PAGINADOR DINÁMICO ---
+  const maxPagesToShow = 5;
+  let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+  let endPage = startPage + maxPagesToShow - 1;
+
+  if (endPage > totalPages) {
+    endPage = totalPages;
+    startPage = Math.max(1, endPage - maxPagesToShow + 1);
+  }
+
+  const pageNumbers = [];
+  for (let i = startPage; i <= endPage; i++) {
+    pageNumbers.push(i);
+  }
+
   // Verificar si el usuario es "Bibliotecari" o "Administrador"
   const isBibliotecariOrAdmin =
     user?.groups?.includes("Bibliotecari") ||
@@ -118,7 +133,7 @@ export default function ExemplarsTable({ array, user, onLoanClick }) {
 
       {array.length > itemsPerPage && (
         <div className="flex justify-center mt-4 items-center gap-1">
-          {/* Ir a primera página */}
+          {/* Primera pag */}
           <button
             onClick={() => handlePageChange(1)}
             disabled={currentPage === 1}
@@ -131,7 +146,7 @@ export default function ExemplarsTable({ array, user, onLoanClick }) {
             «
           </button>
 
-          {/* Página anterior */}
+          {/* Pag anterior */}
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
@@ -145,21 +160,21 @@ export default function ExemplarsTable({ array, user, onLoanClick }) {
           </button>
 
           {/* Páginas numeradas */}
-          {Array.from({ length: totalPages }, (_, index) => (
+          {pageNumbers.map((page) => (
             <button
-              key={index + 1}
-              onClick={() => handlePageChange(index + 1)}
+              key={page}
+              onClick={() => handlePageChange(page)}
               className={`mx-1 px-3 py-1 text-xl rounded-md border transition-all ${
-                currentPage === index + 1
+                currentPage === page
                   ? "bg-blue-700 text-white border-[#8B8EF9] dark:bg-blue-500 dark:border-blue-400"
                   : "bg-blue-500 text-white border-gray-300 hover:bg-blue-300 dark:bg-[#282828] dark:border-gray-600 dark:hover:bg-[#3c3c3c]"
               }`}
             >
-              {index + 1}
+              {page}
             </button>
           ))}
 
-          {/* Página siguiente */}
+          {/*  Pag siguiente */}
           <button
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
@@ -172,7 +187,7 @@ export default function ExemplarsTable({ array, user, onLoanClick }) {
             ›
           </button>
 
-          {/* Ir a última página */}
+          {/* Ultima pag*/}
           <button
             onClick={() => handlePageChange(totalPages)}
             disabled={currentPage === totalPages}

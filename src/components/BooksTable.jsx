@@ -9,6 +9,20 @@ export default function BooksTable({
 }) {
   const { current_page, total_pages, results } = data;
 
+  const maxPagesToShow = 5;
+  let startPage = Math.max(1, current_page - Math.floor(maxPagesToShow / 2));
+  let endPage = startPage + maxPagesToShow - 1;
+
+  if (endPage > total_pages) {
+    endPage = total_pages;
+    startPage = Math.max(1, endPage - maxPagesToShow + 1);
+  }
+
+  const pageNumbers = [];
+  for (let i = startPage; i <= endPage; i++) {
+    pageNumbers.push(i);
+  }
+
   return (
     <div className="flex flex-col w-full mx-auto pb-20 p-10 dark:bg-[#282828] bg-blue-100">
       <h2 className="text-2xl font-semibold text-gray-800 mb-4 dark:text-white">
@@ -105,17 +119,18 @@ export default function BooksTable({
             ‹
           </button>
 
-          {Array.from({ length: total_pages }, (_, index) => (
+          {/* CAMBIO: solo mostramos los botones de las páginas calculadas */}
+          {pageNumbers.map((page) => (
             <button
-              key={index + 1}
-              onClick={() => onPageChange(index + 1)}
+              key={page}
+              onClick={() => onPageChange(page)}
               className={`mx-1 px-3 py-1 text-xl rounded-md transition-all cursor-pointer ${
-                current_page === index + 1
+                current_page === page
                   ? "bg-blue-700 text-white border-[#8B8EF9] dark:bg-blue-500 dark:border-[#8B8EF9]"
                   : "bg-blue-500 text-white border-gray-300 hover:bg-blue-300 dark:bg-[#3c3c3c] dark:border-[#3c3c3c] dark:hover:bg-[#282828]"
               }`}
             >
-              {index + 1}
+              {page}
             </button>
           ))}
 
