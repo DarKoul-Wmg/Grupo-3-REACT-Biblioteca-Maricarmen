@@ -8,7 +8,6 @@ export default function UserProfile({
   image,
   role,
 }) {
-  console.log("ROLE", role);
   return (
     <div className=" w-1/3 flex flex-col items-center gap-4 mb-6 p-2">
       <div className="w-40 h-40 rounded-full bg-gray-100 flex flex-col items-center justify-center overflow-hidden">
