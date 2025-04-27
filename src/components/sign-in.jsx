@@ -22,7 +22,7 @@ export default function SignIn() {
       login(token);
     } catch (err) {
       console.error("Login failed:", err.message);
-      setError("Credenciales inválidas");
+      setError("Credencials invàlides");
     }
   };
 
