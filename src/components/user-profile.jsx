@@ -10,7 +10,7 @@ export default function UserProfile({
 }) {
   console.log("ROLE", role);
   return (
-    <div className="flex flex-col items-center gap-4 mb-6 p-5">
+    <div className=" w-1/3 flex flex-col items-center gap-4 mb-6 p-2">
       <div className="w-40 h-40 rounded-full bg-gray-100 flex flex-col items-center justify-center overflow-hidden">
         {image ? (
           <img
@@ -28,8 +28,8 @@ export default function UserProfile({
           </svg>
         )}
       </div>
-      <div className="flex flex-col items-start">
-        <div className="flex items-center gap-3">
+      <div className="flex flex-col items-start w-full">
+        <div className=" mx-auto flex items-center gap-3 w-full">
           <p className="text-3xl truncate max-w-65 dark:text-white text-black  ">
             {firstName} {lastName}
           </p>

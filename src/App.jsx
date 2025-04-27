@@ -66,7 +66,7 @@ export default function App() {
     setShowBooksTable(true);
     setShowBookDetails(false);
     setShowLogin(false);
-    setActiveSidebarComponent(null); // Desactivar prioridad del Sidebar
+    setActiveSidebarComponent(null);
   };
 
   const handleLoginClick = () => {
@@ -106,8 +106,8 @@ export default function App() {
   const handleLoanClick = (item) => {
     console.log("Loan item: ", item, "selected book:", selectedBook);
 
-    setLoanBookDetails({ ...item, bookTitle: selectedBook.titol }); // Guardar los detalles del ejemplar seleccionado
-    setShowLoanModal(true); // Mostrar el modal
+    setLoanBookDetails({ ...item, bookTitle: selectedBook.titol });
+    setShowLoanModal(true);
   };
 
   const closeModal = () => {
@@ -170,9 +170,7 @@ export default function App() {
         case "FileUpload":
           return <InputCsv />;
         case "LoanHistoryTable":
-          return (
-            <LoanHistoryTable />
-          );
+          return <LoanHistoryTable />;
         case "BookDetails":
           return renderBookDetails();
         default:
