@@ -1,6 +1,6 @@
 const API_ROOT_LOCAL = "http://localhost:8000/api/";
 const API_ROOT_PRODUCTION = "https://biblioteca3.ieti.site/api/";
-export const API_URL = API_ROOT_LOCAL; // Ajusta según tu Django API (uso en local o producción)
+export const API_URL = API_ROOT_PRODUCTION; // Ajusta según tu Django API (uso en local o producción)
 
 export const getBooks = () => {
   return fetch(API_URL + "llibres")
@@ -18,12 +18,11 @@ export const getBooks = () => {
 
 /* Obtenemos el archivo CSV para ser exportado en la base de datos*/
 export const importCsv = async (file) => {
-  //console.log("Llamada a la API para importar CSV...");
   const formData = new FormData();
   formData.append("file", file);
 
   try {
-    const response = await fetch(API_URL + "import-users", {
+    const response = await fetch(API_URL + "importUsersFromCsv/", {
       method: "POST",
       body: formData,
     });
@@ -32,25 +31,28 @@ export const importCsv = async (file) => {
       throw new Error("Error al importar el CSV");
     }
 
-    return await response.json(); // Assuming the API returns JSON
+    return await response.json();
   } catch (error) {
     console.error("Error en la API:", error);
     throw error;
   }
 };
 
-export const getBookById = (id) => {
-  return fetch(`${API_URL}llibres/${id}`)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Error al obtener la información del libro");
-      }
-      return response.json();
-    })
-    .catch((error) => {
-      console.error("Error en la API:", error);
-      return null;
-    });
+export const getItemById = async (id, itemType) => {
+  console.log("ITEM DETAILS", id, itemType);
+  try {
+    const response = await fetch(`${API_URL}catalegs/${itemType}/${id}`);
+    if (!response.ok) {
+      throw new Error("Error al obtener la información del Item");
+    }
+    const data = await response.json();
+    console.log("data", data);
+
+    return data;
+  } catch (error) {
+    console.error("Error en la API:", error);
+    return null;
+  }
 };
 
 export async function logIn(username, password) {
@@ -62,7 +64,7 @@ export async function logIn(username, password) {
     const response = await fetch(API_URL + "token", {
       method: "GET", // El endpoint usa GET
       headers: {
-        Authorization: `Basic ${credentials}`, // Enviar las credenciales en el encabezado
+        Authorization: `Basic ${credentials}`,
       },
     });
 
@@ -71,15 +73,14 @@ export async function logIn(username, password) {
     }
 
     const data = await response.json();
-    //console.log("Login success:", data);
 
     // Guardar el token en localStorage
     localStorage.setItem("token", data.token);
 
-    return data.token; // Retornar el token si es necesario
+    return data.token;
   } catch (err) {
     console.error("Error during login:", err.message);
-    throw err; // Lanza el error para manejarlo en el componente
+    throw err;
   }
 }
 
@@ -88,7 +89,7 @@ export async function getUserInfo(token) {
     const response = await fetch(API_URL + "user-info", {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`, // Enviar el token en el encabezado
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -97,7 +98,6 @@ export async function getUserInfo(token) {
     }
 
     const data = await response.json();
-    //console.log("User info:", data["user-details"]); // Debugging
     return data;
   } catch (err) {
     console.error("Error fetching user info:", err.message);
@@ -111,15 +111,15 @@ export async function updateUserProfile(token, email, telefon, avatar = null) {
     formData.append("email", email);
     formData.append("telefon", telefon);
     if (avatar) {
-      formData.append("avatar", avatar); // Si se sube una imagen, se agrega al FormData
+      formData.append("avatar", avatar);
     }
 
     const response = await fetch(API_URL + "update-profile/", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${token}`, // Enviar el token en el encabezado
+        Authorization: `Bearer ${token}`,
       },
-      body: formData, // Enviar los datos del formulario
+      body: formData,
     });
 
     if (!response.ok) {
@@ -128,10 +128,104 @@ export async function updateUserProfile(token, email, telefon, avatar = null) {
     }
 
     const data = await response.json();
-    //("Perfil actualizado:", data);
     return data;
   } catch (err) {
     console.error("Error al actualizar el perfil:", err.message);
+    throw err;
+  }
+}
+
+export async function searchItem(queryText, page = 1) {
+  try {
+    const response = await fetch(
+      `${API_URL}catalegs/search?text=${encodeURIComponent(
+        queryText
+      )}&page=${page}`,
+      {
+        method: "GET",
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Error al buscar libros");
+    }
+
+    const data = await response.json();
+    let modifiedData = data;
+    if (data) {
+      modifiedData = { ...data, searchText: queryText };
+    }
+    return modifiedData;
+  } catch (err) {
+    console.error("Error en la búsqueda de libros:", err.message);
+    throw err;
+  }
+}
+
+export async function getLoanHistory(userToken) {
+  try {
+    console.log("Token de usuario:", userToken);
+    const response = await fetch(`${API_URL}prestecs/historial`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Error fetching loan history");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error in getLoanHistory:", error.message);
+    throw error;
+  }
+}
+
+export async function searchUsers(textQuery, userToken) {
+  console.log("usertoken", userToken);
+  try {
+    const response = await fetch(`${API_URL}usuaris/${textQuery}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+      },
+    });
+
+    if (!response.ok) {
+      if (response.status === 500) {
+        throw new Error("Server error: Unable to process the request");
+      }
+      throw new Error("Failed to fetch user info");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    console.error("Error fetching user info:", err.message);
+    throw err;
+  }
+}
+
+export async function insertLoan(userId, exemplarId) {
+  try {
+    const response = await fetch(`${API_URL}prestecs/${userId}/${exemplarId}`, {
+      method: "POST",
+    });
+
+    if (!response.ok) {
+      if (response.status === 500) {
+        throw new Error("Server error: Unable to process the request");
+      }
+      throw new Error("Failed to insert loan");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    console.error("Error inserting loan:", err.message);
     throw err;
   }
 }
