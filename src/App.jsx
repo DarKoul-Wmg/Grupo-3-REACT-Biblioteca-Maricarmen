@@ -198,7 +198,7 @@ export default function App() {
   }, [user, showLogin]);
 
   return (
-    <div className="min-h-screen w-screen bg-blue-100 dark:bg-[#141414] flex flex-col">
+    <div className="min-h-screen w-full bg-blue-100 dark:bg-[#141414] flex flex-col">
       <Header
         handleBookSelect={handleBookSelect}
         onSearch={handleSearch}

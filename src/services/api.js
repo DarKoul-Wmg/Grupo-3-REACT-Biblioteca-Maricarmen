@@ -1,6 +1,6 @@
 const API_ROOT_LOCAL = "http://localhost:8000/api/";
 const API_ROOT_PRODUCTION = "https://biblioteca3.ieti.site/api/";
-export const API_URL = API_ROOT_PRODUCTION; // Ajusta según tu Django API (uso en local o producción)
+export const API_URL = API_ROOT_LOCAL; // Ajusta según tu Django API (uso en local o producción)
 
 export const getBooks = () => {
   return fetch(API_URL + "llibres")

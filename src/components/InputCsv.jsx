@@ -56,6 +56,9 @@ export default function InputCsv() {
   return (
     <div className="w-full flex items-center justify-center dark:bg-[#282828] bg-blue-100">
       <div className="flex items-center justify-center flex-col gap-4">
+      <h1 className="text-5xl font-bold text-gray-800 dark:text-white mb-2 mt-0">
+      Importar Usuaris
+    </h1>
         <div className="flex items-center justify-center flex-col gap-2">
           <label className="text-sm font-medium text-gray-700 dark:text-white">
             Selecciona un arxiu CSV:
@@ -87,6 +90,7 @@ export default function InputCsv() {
         </div>
 
         <Button
+          type="button"
           onClick={handleUpload}
           disabled={!file}
           variant="outline"
