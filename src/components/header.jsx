@@ -26,7 +26,7 @@ export default function Header({
           setSelectedExemplars={setSelectedExemplars}
         />
 
-        <div className="min-w-[100px] flex justify-end">
+        <div className="min-w-[100px] flex items-center justify-end">
           <DarkModeSwitch />
 
           {user?.groups == null ? (
@@ -34,9 +34,14 @@ export default function Header({
               Iniciar Sessió
             </Button>
           ) : (
-            <Button variant="outline" onClick={logout}>
-              Tancar Sessió
-            </Button>
+            <>
+              <span className="text-gray-800 dark:text-white font-medium ml-2 mr-2">
+                Hola, {user && user.first_name} <span role="img" aria-label="saludo">👋</span>
+              </span>
+              <Button variant="outline" onClick={logout}>
+                Tancar Sessió
+              </Button>
+            </>
           )}
         </div>
       </nav>
