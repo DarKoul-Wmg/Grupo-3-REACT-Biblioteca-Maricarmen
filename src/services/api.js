@@ -39,14 +39,12 @@ export const importCsv = async (file) => {
 };
 
 export const getItemById = async (id, itemType) => {
-  console.log("ITEM DETAILS", id, itemType);
   try {
     const response = await fetch(`${API_URL}catalegs/${itemType}/${id}`);
     if (!response.ok) {
       throw new Error("Error al obtener la información del Item");
     }
     const data = await response.json();
-    console.log("data", data);
 
     return data;
   } catch (error) {
@@ -164,7 +162,6 @@ export async function searchItem(queryText, page = 1) {
 
 export async function getLoanHistory(userToken) {
   try {
-    console.log("Token de usuario:", userToken);
     const response = await fetch(`${API_URL}prestecs/historial`, {
       method: "GET",
       headers: {
@@ -185,7 +182,6 @@ export async function getLoanHistory(userToken) {
 }
 
 export async function searchUsers(textQuery, userToken) {
-  console.log("usertoken", userToken);
   try {
     const response = await fetch(`${API_URL}usuaris/${textQuery}`, {
       method: "GET",

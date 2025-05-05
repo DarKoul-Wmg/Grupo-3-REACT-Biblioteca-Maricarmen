@@ -9,8 +9,6 @@ export default function LoanHistoryTable() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  
-
   useEffect(() => {
     async function fetchLoanHistory() {
       try {
@@ -34,8 +32,16 @@ export default function LoanHistoryTable() {
         Inicia sessió un altre cop per veure el teu historial de préstecs.
       </div>
     );
-  if (loading) return <div className="dark:text-white">Carregant historial de préstecs...</div>;
-  if (!loanHistory.length) return <div className="dark:text-white">No hi ha historial de préstecs.</div>;
+  if (loading)
+    return (
+      <div className="dark:text-white">Carregant historial de préstecs...</div>
+    );
+  if (!loanHistory.length)
+    return (
+      <div className="dark:text-white text-black">
+        No hi ha historial de préstecs.
+      </div>
+    );
 
   // PAGINADOR
   const totalPages = Math.ceil(loanHistory.length / itemsPerPage);
