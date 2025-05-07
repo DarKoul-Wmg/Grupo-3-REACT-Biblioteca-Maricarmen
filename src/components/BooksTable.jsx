@@ -1,4 +1,5 @@
 import { getItemById } from "../services/api";
+import StateCountTag from "./ui/state-count-tag";
 
 export default function BooksTable({
   data,
@@ -29,6 +30,21 @@ export default function BooksTable({
         Llistat de llibres
       </h2>
 
+      {/*Indice de estados */}
+      <div className="mb-4 flex gap-4 items-center">
+        <span className="ml-2 mb-4 mt-4 text-xm font-bold text-gray-600 dark:text-white">Índex d'estats: </span>
+        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700 border border-green-700">
+          Disponible
+        </span>
+        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-600 border border-yellow-600">
+          No disponible
+        </span>
+        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-600 border border-red-600">
+          Exclòs de préstec
+        </span>
+        
+      </div>
+
       {isPending && (
         <div className="flex justify-center items-center py-4">
           <span className="text-blue-500 text-lg dark:text-white">
@@ -43,7 +59,7 @@ export default function BooksTable({
             <table className="min-w-full divide-y divide-gray-200 dark:divide-[#3c3c3c]">
               <thead className="bg-blue-500 dark:bg-[#282828]">
                 <tr>
-                  <th className="px-8 py-3 text-left text-xs font-semibold text-white uppercase">
+                  <th className="px-8 py-3 text-left text-xs font-semibold text-white uppercase max-w-1/3 w-1/3">
                     Títol
                   </th>
                   <th className="px-8 py-3 text-left text-xs font-semibold text-white uppercase">
@@ -51,6 +67,9 @@ export default function BooksTable({
                   </th>
                   <th className="px-8 py-3 text-left text-xs font-semibold text-white uppercase">
                     Tipus
+                  </th>
+                  <th className="px-8 py-3 text-left text-xs font-semibold text-white uppercase">
+                    Exemplars
                   </th>
                   <th className="px-8 py-3 text-left text-xs font-semibold text-white uppercase">
                     Detalls
@@ -63,7 +82,7 @@ export default function BooksTable({
                     key={book.id}
                     className="hover:bg-blue-100 transition-colors dark:hover:bg-[#3c3c3c]"
                   >
-                    <td className="px-8 py-4 text-sm text-left font-medium text-gray-800 dark:text-white">
+                    <td className="px-8 py-4 text-sm text-left font-medium text-gray-800 dark:text-white max-w-[35%] w-[35%]">
                       {book.titol}
                     </td>
                     <td className="px-8 py-4 text-sm text-left text-gray-800 dark:text-white">
@@ -72,10 +91,26 @@ export default function BooksTable({
                     <td className="px-8 py-4 text-sm text-left text-gray-800 dark:text-white">
                       {book.type}
                     </td>
+                    <td className="px-8 py-4 text-sm text-left">
+                      {(() => {
+                        const exemplars = book.exemplars || [];
+                        console.log(exemplars);
+                        const countDisponible = exemplars.filter(e => e.disponible && !e.exclos_prestec).length;
+                        const countNoDisponible = exemplars.filter(e => !e.disponible && !e.exclos_prestec).length;
+                        const countExclos = exemplars.filter(e => e.exclos_prestec).length;
+
+                        return (
+                          <>
+                            {countDisponible > 0 && <StateCountTag count={countDisponible} type="disponible" />}
+                            {countNoDisponible > 0 && <StateCountTag count={countNoDisponible} type="nodisponible" />}
+                            {countExclos > 0 && <StateCountTag count={countExclos} type="exclos" />}
+                          </>
+                        );
+                      })()}
+                    </td>
                     <td className="px-8 py-4 text-sm text-left text-blue-600 dark:text-blue-400">
                       <button
                         onClick={() => {
-                          console.log("Ejecutando llamada");
                           getItemById(book.id, book.type).then((value) => {
                             setSelectedExemplars(value.exemplars);
                             onBookSelect(value);
