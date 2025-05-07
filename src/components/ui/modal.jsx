@@ -158,7 +158,7 @@ export default function Modal({
                 onChange={(e) => {
                   if (!selectedUser) handleSearch(e.target.value);
                 }}
-                className="w-full rounded-md border-gray-300  text-black dark:ring-white dark:focus:border-white dark:focus:ring-white shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                 className="w-full rounded-md border-gray-300 text-black dark:text-white dark:ring-white dark:focus:border-white dark:focus:ring-white shadow-sm focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 dark:placeholder-gray-400"
                 placeholder="Buscar per nom/cognom/tfn"
                 disabled={!!selectedUser} // Deshabilitar el input si hay un usuario seleccionado
               />

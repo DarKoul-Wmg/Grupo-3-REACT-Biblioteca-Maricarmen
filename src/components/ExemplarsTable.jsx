@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Button from "./ui/button";
 import Tooltip from "./ui/tooltip";
+import TableTag from "./ui/table-tag";
 
 export default function ExemplarsTable({ array, user, onLoanClick }) {
   const [currentPage, setCurrentPage] = useState(1); // Página actual
@@ -64,6 +65,9 @@ export default function ExemplarsTable({ array, user, onLoanClick }) {
                   <th className="px-8 py-3 text-start text-xs font-semibold text-white uppercase">
                     Centre
                   </th>
+                  <th className="px-8 py-3 text-start text-xs font-semibold text-white uppercase">
+                    Estat
+                  </th>
                   {isBibliotecariOrAdmin && (
                     <th className="px-8 py-3 text-start text-xs font-semibold text-white uppercase">
                       Accions
@@ -75,12 +79,15 @@ export default function ExemplarsTable({ array, user, onLoanClick }) {
                 {currentData.map((item) => {
                   const isDisabled =
                     item.exclos_prestec ||
-                    (user?.centre && user.centre !== item.centre.nom);
+                    (user?.centre && user.centre !== item.centre.nom) ||
+                    !item.disponible; // Deshabilitar si no disponible;
 
                   const tooltipMessage = item.exclos_prestec
                     ? "Aquest exemplar està exclòs de préstec."
                     : user?.centre && user.centre !== item.centre.nom
                     ? "Aquest exemplar no pertany al teu centre."
+                    : !item.disponible
+                    ? "Aquest exemplar ja es troba en préstec."
                     : "";
 
                   return (
@@ -104,6 +111,9 @@ export default function ExemplarsTable({ array, user, onLoanClick }) {
                       </td>
                       <td className="px-8 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white text-left">
                         {item.centre.nom}
+                      </td>
+                      <td className="px-8 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white">
+                        <TableTag disponible={item.disponible} exclosPrestec={item.exclos_prestec} />
                       </td>
                       {isBibliotecariOrAdmin && (
                         <td className="px-8 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white text-left">
