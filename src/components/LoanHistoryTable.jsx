@@ -2,6 +2,36 @@ import React, { useEffect, useState, useContext } from "react";
 import { getLoanHistory } from "../services/api";
 import { AuthContext } from "../contexts/authcontext";
 
+function timeAgo(dateString) {
+  const date = new Date(dateString);
+  const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
+
+  const intervals = [
+    [60, "segon"],
+    [60, "minut"],
+    [24, "hora"],
+    [7, "dia"],
+    [4.34524, "setmana"],
+    [12, "mes"],
+    [Number.POSITIVE_INFINITY, "any"],
+  ];
+
+  const durations = [60, 60, 24, 7, 4.34524, 12];
+  let unit = "";
+  let value = seconds;
+  for (let i = 0; i < intervals.length; i++) {
+    if (value < intervals[i][0]) {
+      unit = intervals[i][1];
+      break;
+    }
+    value /= durations[i];
+  }
+
+  const rounded = Math.floor(value);
+  const plural = rounded !== 1 ? "s" : "";
+  return `Fa ${rounded} ${unit}${plural}`;
+}
+
 export default function LoanHistoryTable() {
   const { userToken: token } = useContext(AuthContext);
   const [loanHistory, setLoanHistory] = useState([]);
@@ -161,10 +191,20 @@ export default function LoanHistoryTable() {
                         {estat}
                       </td>
                       <td className="px-8 py-4 whitespace-nowrap text-sm text-left text-gray-800 dark:text-white">
-                        {prestec.data_prestec}
+                        <span>
+                          {prestec.data_prestec}{" "}
+                          <span className="text-xs italic text-gray-500">
+                            ({timeAgo(prestec.data_prestec)})
+                          </span>
+                        </span>
                       </td>
                       <td className="px-8 py-4 whitespace-nowrap text-sm text-left text-gray-800 dark:text-white">
-                        {prestec.data_retorn}
+                        <span>
+                          {prestec.data_retorn}{" "}
+                          <span className="text-xs italic text-gray-500">
+                            ({timeAgo(prestec.data_retorn)})
+                          </span>
+                        </span>
                       </td>
                       <td className="px-8 py-4 whitespace-pre-line text-sm text-left text-gray-800 break-all dark:text-white">
                         {prestec.anotacions}
