@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Button from "./ui/button";
 import Tooltip from "./ui/tooltip";
+import TableTag from "./ui/table-tag";
 
 export default function ExemplarsTable({ array, user, onLoanClick }) {
   const [currentPage, setCurrentPage] = useState(1); // Página actual
@@ -19,6 +20,21 @@ export default function ExemplarsTable({ array, user, onLoanClick }) {
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
+
+  // ---PAGINADOR DINÁMICO ---
+  const maxPagesToShow = 5;
+  let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+  let endPage = startPage + maxPagesToShow - 1;
+
+  if (endPage > totalPages) {
+    endPage = totalPages;
+    startPage = Math.max(1, endPage - maxPagesToShow + 1);
+  }
+
+  const pageNumbers = [];
+  for (let i = startPage; i <= endPage; i++) {
+    pageNumbers.push(i);
+  }
 
   // Verificar si el usuario es "Bibliotecari" o "Administrador"
   const isBibliotecariOrAdmin =
@@ -49,6 +65,9 @@ export default function ExemplarsTable({ array, user, onLoanClick }) {
                   <th className="px-8 py-3 text-start text-xs font-semibold text-white uppercase">
                     Centre
                   </th>
+                  <th className="px-8 py-3 text-start text-xs font-semibold text-white uppercase">
+                    Estat
+                  </th>
                   {isBibliotecariOrAdmin && (
                     <th className="px-8 py-3 text-start text-xs font-semibold text-white uppercase">
                       Accions
@@ -60,12 +79,15 @@ export default function ExemplarsTable({ array, user, onLoanClick }) {
                 {currentData.map((item) => {
                   const isDisabled =
                     item.exclos_prestec ||
-                    (user?.centre && user.centre !== item.centre.nom);
+                    (user?.centre && user.centre !== item.centre.nom) ||
+                    !item.disponible; // Deshabilitar si no disponible;
 
                   const tooltipMessage = item.exclos_prestec
                     ? "Aquest exemplar està exclòs de préstec."
                     : user?.centre && user.centre !== item.centre.nom
                     ? "Aquest exemplar no pertany al teu centre."
+                    : !item.disponible
+                    ? "Aquest exemplar ja es troba en préstec."
                     : "";
 
                   return (
@@ -89,6 +111,9 @@ export default function ExemplarsTable({ array, user, onLoanClick }) {
                       </td>
                       <td className="px-8 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white text-left">
                         {item.centre.nom}
+                      </td>
+                      <td className="px-8 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white">
+                        <TableTag disponible={item.disponible} exclosPrestec={item.exclos_prestec} />
                       </td>
                       {isBibliotecariOrAdmin && (
                         <td className="px-8 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white text-left">
@@ -118,7 +143,7 @@ export default function ExemplarsTable({ array, user, onLoanClick }) {
 
       {array.length > itemsPerPage && (
         <div className="flex justify-center mt-4 items-center gap-1">
-          {/* Ir a primera página */}
+          {/* Primera pag */}
           <button
             onClick={() => handlePageChange(1)}
             disabled={currentPage === 1}
@@ -131,7 +156,7 @@ export default function ExemplarsTable({ array, user, onLoanClick }) {
             «
           </button>
 
-          {/* Página anterior */}
+          {/* Pag anterior */}
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
@@ -145,21 +170,21 @@ export default function ExemplarsTable({ array, user, onLoanClick }) {
           </button>
 
           {/* Páginas numeradas */}
-          {Array.from({ length: totalPages }, (_, index) => (
+          {pageNumbers.map((page) => (
             <button
-              key={index + 1}
-              onClick={() => handlePageChange(index + 1)}
+              key={page}
+              onClick={() => handlePageChange(page)}
               className={`mx-1 px-3 py-1 text-xl rounded-md border transition-all ${
-                currentPage === index + 1
+                currentPage === page
                   ? "bg-blue-700 text-white border-[#8B8EF9] dark:bg-blue-500 dark:border-blue-400"
                   : "bg-blue-500 text-white border-gray-300 hover:bg-blue-300 dark:bg-[#282828] dark:border-gray-600 dark:hover:bg-[#3c3c3c]"
               }`}
             >
-              {index + 1}
+              {page}
             </button>
           ))}
 
-          {/* Página siguiente */}
+          {/*  Pag siguiente */}
           <button
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
@@ -172,7 +197,7 @@ export default function ExemplarsTable({ array, user, onLoanClick }) {
             ›
           </button>
 
-          {/* Ir a última página */}
+          {/* Ultima pag*/}
           <button
             onClick={() => handlePageChange(totalPages)}
             disabled={currentPage === totalPages}

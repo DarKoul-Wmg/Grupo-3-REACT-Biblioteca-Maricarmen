@@ -14,6 +14,7 @@ import UserForm from "./components/user-form";
 import { getItemById } from "./services/api";
 import { searchItem } from "./services/api";
 import { useTransition } from "react";
+import LoanHistoryTable from "./components/LoanHistoryTable";
 import Modal from "./components/ui/modal";
 import DetailedExemplarsTable from "./components/detailed-exemplars-table";
 
@@ -64,7 +65,7 @@ export default function App() {
     setShowBooksTable(true);
     setShowBookDetails(false);
     setShowLogin(false);
-    setActiveSidebarComponent(null); // Desactivar prioridad del Sidebar
+    setActiveSidebarComponent(null);
   };
 
   const handleLoginClick = () => {
@@ -102,6 +103,8 @@ export default function App() {
   };
 
   const handleLoanClick = (item) => {
+    console.log("Loan item: ", item, "selected book:", selectedBook);
+
     setLoanBookDetails({ ...item, bookTitle: selectedBook.titol });
     setShowLoanModal(true);
   };
@@ -200,7 +203,7 @@ export default function App() {
   }, [user, showLogin]);
 
   return (
-    <div className="min-h-screen w-screen bg-blue-100 dark:bg-[#141414] flex flex-col">
+    <div className="min-h-screen w-full bg-blue-100 dark:bg-[#141414] flex flex-col">
       <Header
         handleBookSelect={handleBookSelect}
         onSearch={handleSearch}

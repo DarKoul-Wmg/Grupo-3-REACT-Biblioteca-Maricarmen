@@ -6,12 +6,13 @@ export default function Badge({ children, type, value, className = "" }) {
   const label = dataSource[value]?.customText || dataSource[value]?.label || "";
 
   return (
-    <div className="w-1/4 flex justify-center">
+    <div className=" flex justify-center">
       <span
-        className={`inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium ${styles} ${className}`}
+        className={` gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium ${styles} ${className}`}
       >
-        {children}
         {`${label}`}
+
+        {children}
       </span>
     </div>
   );
