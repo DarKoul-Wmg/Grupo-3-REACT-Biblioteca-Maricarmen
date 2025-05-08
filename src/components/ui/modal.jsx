@@ -1,7 +1,9 @@
 import { useState, useContext } from "react";
 import { searchUsers, insertLoan } from "../../services/api";
+import { timeAgo } from "../../services/utils";
 import { AuthContext } from "../../contexts/authcontext";
 import { useToast } from "../../contexts/toastcontext";
+
 
 export default function Modal({
   loanDetails,
@@ -114,7 +116,7 @@ export default function Modal({
             <div className="">
               <p className="text-xs text-gray-500 dark:text-white">Inici</p>
               <p className="text-base font-medium text-gray-700 dark:text-white">
-                {loanStart}
+                {loanStart} ({timeAgo(loanStart)})
               </p>
             </div>
             <div className="text-gray-400">
@@ -138,7 +140,7 @@ export default function Modal({
                 Fi previst de préstec
               </p>
               <p className="text-base font-medium text-gray-700 dark:text-white">
-                {loanEnd}
+                {loanEnd} ({timeAgo(loanEnd)})
               </p>
             </div>
           </div>
