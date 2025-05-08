@@ -2,9 +2,10 @@ import Input from "./ui/input-label-unit";
 import Card from "./ui/card";
 import Button from "./ui/button";
 import { useContext, useState } from "react";
-import { logIn } from "../services/api";
+import { logIn, googleLogin } from "../services/api";
 import { AuthContext } from "../contexts/authcontext";
-
+import { GoogleLogin } from "@react-oauth/google";
+  
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -70,6 +71,21 @@ export default function SignIn() {
             </p>
           )}
         </form>
+        <div className="flex justify-center mt-2">
+        <GoogleLogin
+          onSuccess={async (credentialResponse) => {
+            try {
+              const token = await googleLogin(credentialResponse.credential);
+              login(token);
+            } catch (err) {
+              const msg = err?.message || err?.toString();
+              setError("Error amb Google Login: " + msg);
+            }
+          }}
+          onError={() => setError("Error amb Google Login")}
+          useOneTap
+        />
+      </div>
       </Card>
     </div>
   );
