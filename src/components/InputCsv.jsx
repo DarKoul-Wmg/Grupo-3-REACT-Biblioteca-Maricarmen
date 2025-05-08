@@ -2,6 +2,7 @@ import { useState } from "react";
 import { importCsv } from "../services/api";
 import Button from "./ui/button";
 
+import { generateBarcodePdf } from "../services/api";
 export default function InputCsv() {
   const [file, setFile] = useState(null);
   const [responseData, setResponseData] = useState({
@@ -96,19 +97,19 @@ export default function InputCsv() {
         </Button>
 
         {responseData.message && (
-          <p>
-          Importació completada. Usuaris importats:{" "}
-          <span className="text-green-600 font-bold">
-            {responseData.imported}
-          </span>
-          . Errors:{" "}
-          <span className="text-red-600 font-bold">
-            {responseData.errorCount}
-          </span>
-          . Warnings:{" "}
-          <span className="text-yellow-600 font-bold">
-            {responseData.warningCount}
-          </span>
+          <p className="mt-6 text-black dark:text-white">
+            Importació completada. Usuaris importats:{" "}
+            <span className="text-green-600 font-bold">
+              {responseData.imported}
+            </span>
+            . Errors:{" "}
+            <span className="text-red-600 font-bold">
+              {responseData.errorCount}
+            </span>
+            . Warnings:{" "}
+            <span className="text-yellow-600 font-bold">
+              {responseData.warningCount}
+            </span>
           </p>
         )}
 
@@ -127,15 +128,15 @@ export default function InputCsv() {
               <tbody>
                 {responseData.resultsMessage.map((error, index) => {
                   const lineNumber = error.match(/\d+/)?.[0] || "N/A";
-                    const errorType =
+                  const errorType =
                     responseData.resultsStatus[index]?.toLowerCase() ===
                     "warning"
                       ? "Avís"
                       : responseData.resultsStatus[index]?.toLowerCase() ===
-                      "success"
+                        "success"
                       ? "Èxit"
                       : "Error";
-                    const textColor =
+                  const textColor =
                     errorType === "Avís"
                       ? "text-yellow-600"
                       : errorType === "Èxit"

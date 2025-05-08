@@ -61,6 +61,12 @@ export default function SidebarNavigation({ onSidebarClick }) {
       component: "MyLoans",
       roles: ["Usuari", "Bibliotecari", "Administrador"],
     },
+    {
+      icon: <BookIcon />,
+      label: "Veure Tots els Exemplars",
+      component: "ExemplarsTable",
+      roles: ["Bibliotecari", "Administrador"],
+    },
   ];
 
   // Filtrar los elementos según los roles del usuario

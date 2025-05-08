@@ -15,6 +15,7 @@ import { getItemById } from "./services/api";
 import { searchItem } from "./services/api";
 import { useTransition } from "react";
 import Modal from "./components/ui/modal";
+import DetailedExemplarsTable from "./components/detailed-exemplars-table";
 
 export default function App() {
   const { user, activeComponent, login } = useContext(AuthContext);
@@ -51,7 +52,6 @@ export default function App() {
           return;
         }
 
-        console.log("Respuesta actualización libro: ", response);
         setSelectedExemplars(response.exemplars);
       })
       .catch((error) => {
@@ -60,7 +60,6 @@ export default function App() {
   };
 
   const handleSearch = (search) => {
-    console.log("Search results: ", search);
     setSearchResults(search);
     setShowBooksTable(true);
     setShowBookDetails(false);
@@ -103,10 +102,8 @@ export default function App() {
   };
 
   const handleLoanClick = (item) => {
-    console.log("Loan item: ", item, "selected book:", selectedBook);
-
-    setLoanBookDetails({ ...item, bookTitle: selectedBook.titol }); // Guardar los detalles del ejemplar seleccionado
-    setShowLoanModal(true); // Mostrar el modal
+    setLoanBookDetails({ ...item, bookTitle: selectedBook.titol });
+    setShowLoanModal(true);
   };
 
   const closeModal = () => {
@@ -168,11 +165,13 @@ export default function App() {
           return <UserForm />;
         case "FileUpload":
           return <InputCsv />;
-        case "MyLoans":
+        case "LoanHistoryTable":
+          return <LoanHistoryTable />;
+        case "ExemplarsTable":
           return (
-            <h1 className="text-2xl font-bold text-center">
-              Els meus préstecs
-            </h1>
+            <>
+              <DetailedExemplarsTable />
+            </>
           );
         case "BookDetails":
           return renderBookDetails();

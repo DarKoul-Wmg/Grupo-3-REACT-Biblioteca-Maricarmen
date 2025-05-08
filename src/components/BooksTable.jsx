@@ -61,7 +61,6 @@ export default function BooksTable({
                     <td className="px-8 py-4 text-sm text-left text-blue-600 dark:text-blue-400">
                       <button
                         onClick={() => {
-                          console.log("Ejecutando llamada");
                           getItemById(book.id, book.type).then((value) => {
                             setSelectedExemplars(value.exemplars);
                             onBookSelect(value);
