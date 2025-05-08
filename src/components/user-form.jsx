@@ -39,7 +39,7 @@ export default function UserForm() {
         image={user?.imatge || null}
         role={user?.groups || ["usuari"]}
       />
-      <div className="bg-gray-50 border border-gray-200 rounded-xl shadow-sm w-2/4 dark:bg-[#282828] dark:border-[#3c3c3c]">
+      <div className="bg-gray-50 border border-gray-200 rounded-xl shadow-sm w-2/4 dark:bg-[#282828] dark:border-gray-500">
         <div className="py-2 border-b border-gray-200 dark:border-[#3c3c3c]">
           <h3 className="text-gray-800 font-semibold dark:text-white">
             Edita la informació de l'usuari

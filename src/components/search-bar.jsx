@@ -88,7 +88,7 @@ export default function SearchBar({
 
   return (
     <form
-      className={`w-[50%] search-bar-container flex items-center gap-3 pr-[3%] ${className}`}
+      className={`w-[50%] search-bar-container flex items-center pr-[3%] ${className}`}
       onSubmit={handleSearch}
       {...props}
     >
@@ -115,7 +115,7 @@ export default function SearchBar({
                   type="button"
                   onMouseDown={(e) => e.preventDefault()}
                   onClick={() => handleBookClick(item)}
-                  className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 flex justify-between items-center cursor-pointer dark:text-white"
+                  className="w-full text-left px-4 py-2 hover:bg-gray-100 text-black dark:hover:bg-gray-700 flex justify-between items-center cursor-pointer dark:text-white"
                 >
                   <span>
                     {item.titol
@@ -153,7 +153,7 @@ export default function SearchBar({
       </div>
       <Button
         type="submit"
-        className="text-sm dark:text-white"
+        className="text-sm dark:text-white ml-3"
         onMouseDown={(e) => e.preventDefault()}
         loading={isLoading}
       >

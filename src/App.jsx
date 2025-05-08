@@ -14,6 +14,7 @@ import UserForm from "./components/user-form";
 import { getItemById } from "./services/api";
 import { searchItem } from "./services/api";
 import { useTransition } from "react";
+import LoanHistoryTable from "./components/LoanHistoryTable";
 import Modal from "./components/ui/modal";
 
 export default function App() {
@@ -65,7 +66,7 @@ export default function App() {
     setShowBooksTable(true);
     setShowBookDetails(false);
     setShowLogin(false);
-    setActiveSidebarComponent(null); // Desactivar prioridad del Sidebar
+    setActiveSidebarComponent(null);
   };
 
   const handleLoginClick = () => {
@@ -105,8 +106,8 @@ export default function App() {
   const handleLoanClick = (item) => {
     console.log("Loan item: ", item, "selected book:", selectedBook);
 
-    setLoanBookDetails({ ...item, bookTitle: selectedBook.titol }); // Guardar los detalles del ejemplar seleccionado
-    setShowLoanModal(true); // Mostrar el modal
+    setLoanBookDetails({ ...item, bookTitle: selectedBook.titol });
+    setShowLoanModal(true);
   };
 
   const closeModal = () => {
@@ -168,12 +169,8 @@ export default function App() {
           return <UserForm />;
         case "FileUpload":
           return <InputCsv />;
-        case "MyLoans":
-          return (
-            <h1 className="text-2xl font-bold text-center">
-              Els meus préstecs
-            </h1>
-          );
+        case "LoanHistoryTable":
+          return <LoanHistoryTable />;
         case "BookDetails":
           return renderBookDetails();
         default:
@@ -201,7 +198,7 @@ export default function App() {
   }, [user, showLogin]);
 
   return (
-    <div className="min-h-screen w-screen bg-blue-100 dark:bg-[#141414] flex flex-col">
+    <div className="min-h-screen w-full bg-blue-100 dark:bg-[#141414] flex flex-col">
       <Header
         handleBookSelect={handleBookSelect}
         onSearch={handleSearch}

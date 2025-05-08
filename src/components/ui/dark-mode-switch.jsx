@@ -17,7 +17,7 @@ export default function DarkModeSwitch() {
     <button
       type="button"
       onClick={toggleTheme}
-      className="font-medium text-gray-800 dark:text-gray-200 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none px-1 mx-2"
+      className=" cursor-pointer font-medium text-gray-800 dark:text-gray-200 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none px-1 mx-2"
       aria-label="Cambiar tema"
     >
       <span className="group inline-flex items-center justify-center size-9">

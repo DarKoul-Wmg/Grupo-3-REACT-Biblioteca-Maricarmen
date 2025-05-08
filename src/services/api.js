@@ -31,7 +31,7 @@ export const importCsv = async (file) => {
       throw new Error("Error al importar el CSV");
     }
 
-    return await response.json(); // Assuming the API returns JSON
+    return await response.json();
   } catch (error) {
     console.error("Error en la API:", error);
     throw error;
@@ -39,16 +39,14 @@ export const importCsv = async (file) => {
 };
 
 export const getItemById = async (id, itemType) => {
-  console.log("ITEM DETAILS", id, itemType);
   try {
     const response = await fetch(`${API_URL}catalegs/${itemType}/${id}`);
     if (!response.ok) {
       throw new Error("Error al obtener la información del Item");
     }
     const data = await response.json();
-    console.log("data", data);
 
-    return data; // Retorna los resultados de la búsqueda
+    return data;
   } catch (error) {
     console.error("Error en la API:", error);
     return null;
@@ -64,7 +62,7 @@ export async function logIn(username, password) {
     const response = await fetch(API_URL + "token", {
       method: "GET", // El endpoint usa GET
       headers: {
-        Authorization: `Basic ${credentials}`, // Enviar las credenciales en el encabezado
+        Authorization: `Basic ${credentials}`,
       },
     });
 
@@ -77,10 +75,10 @@ export async function logIn(username, password) {
     // Guardar el token en localStorage
     localStorage.setItem("token", data.token);
 
-    return data.token; // Retornar el token si es necesario
+    return data.token;
   } catch (err) {
     console.error("Error during login:", err.message);
-    throw err; // Lanza el error para manejarlo en el componente
+    throw err;
   }
 }
 
@@ -89,7 +87,7 @@ export async function getUserInfo(token) {
     const response = await fetch(API_URL + "user-info", {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`, // Enviar el token en el encabezado
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -111,15 +109,15 @@ export async function updateUserProfile(token, email, telefon, avatar = null) {
     formData.append("email", email);
     formData.append("telefon", telefon);
     if (avatar) {
-      formData.append("avatar", avatar); // Si se sube una imagen, se agrega al FormData
+      formData.append("avatar", avatar);
     }
 
     const response = await fetch(API_URL + "update-profile/", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${token}`, // Enviar el token en el encabezado
+        Authorization: `Bearer ${token}`,
       },
-      body: formData, // Enviar los datos del formulario
+      body: formData,
     });
 
     if (!response.ok) {
@@ -128,7 +126,6 @@ export async function updateUserProfile(token, email, telefon, avatar = null) {
     }
 
     const data = await response.json();
-    //("Perfil actualizado:", data);
     return data;
   } catch (err) {
     console.error("Error al actualizar el perfil:", err.message);
@@ -156,19 +153,40 @@ export async function searchItem(queryText, page = 1) {
     if (data) {
       modifiedData = { ...data, searchText: queryText };
     }
-    return modifiedData; // { current_page, total_pages, results }
+    return modifiedData;
   } catch (err) {
     console.error("Error en la búsqueda de libros:", err.message);
     throw err;
   }
 }
+
+export async function getLoanHistory(userToken) {
+  try {
+    const response = await fetch(`${API_URL}prestecs/historial`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Error fetching loan history");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error in getLoanHistory:", error.message);
+    throw error;
+  }
+}
+
 export async function searchUsers(textQuery, userToken) {
-  console.log("usertoken", userToken);
   try {
     const response = await fetch(`${API_URL}usuaris/${textQuery}`, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${userToken}`, // Enviar las credenciales en el encabezado
+        Authorization: `Bearer ${userToken}`,
       },
     });
 
@@ -180,7 +198,7 @@ export async function searchUsers(textQuery, userToken) {
     }
 
     const data = await response.json();
-    return data; // Assuming the API returns a list of users
+    return data;
   } catch (err) {
     console.error("Error fetching user info:", err.message);
     throw err;
@@ -201,7 +219,7 @@ export async function insertLoan(userId, exemplarId) {
     }
 
     const data = await response.json();
-    return data; // Assuming the API returns the loan details
+    return data;
   } catch (err) {
     console.error("Error inserting loan:", err.message);
     throw err;

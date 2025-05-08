@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from "react";
 import { getUserInfo } from "../services/api";
+import { API_URL } from "../services/api";
 
 export const AuthContext = createContext({
   user: null, // Información del usuario logueado
@@ -28,7 +29,20 @@ export const AuthProvider = ({ children }) => {
   const fetchUserInfo = async (token) => {
     try {
       const userInfo = await getUserInfo(token);
+
       setUser(userInfo["user-details"]); // Actualizar el estado del usuario
+
+      if (userInfo["user-details"]?.groups?.includes("Administrador")) {
+        let adminUrl = API_URL;
+
+        if (API_URL.includes(":8000")) {
+          adminUrl = API_URL.slice(0, -4) + "/admin";
+        } else {
+          adminUrl = API_URL.replace("/api", "/admin");
+        }
+
+        window.location.href = adminUrl;
+      }
     } catch (err) {
       console.error(
         "Error al obtener la información del usuario:",
