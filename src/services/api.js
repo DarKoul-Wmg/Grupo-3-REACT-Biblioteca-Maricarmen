@@ -227,19 +227,31 @@ export async function insertLoan(userId, exemplarId) {
 }
 
 export async function googleLogin(id_token) {
-  try {
-    const response = await fetch(API_URL + "google-login/", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id_token }),
-    });
-    if (!response.ok) {
-      throw new Error("Google login failed");
-    }
-    const data = await response.json();
-    return data.token;
-  } catch (err) {
-    console.error("Error during Google login:", err.message);
-    throw err;
+  const response = await fetch(API_URL + "google-login/", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id_token }),
+  });
+  if (!response.ok) {
+    throw new Error("Google login failed");
   }
+  const data = await response.json();
+  return data.token;
+}
+
+export async function microsoftLoginFromMsalResponse(msalResponse) {
+  // Extrae el idToken del objeto de respuesta de MSAL
+  const id_token = msalResponse.idToken;
+  if (!id_token) throw new Error("No se ha recibido id_token de Microsoft");
+
+  const response = await fetch(API_URL + "microsoft-login/", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id_token }),
+  });
+  if (!response.ok) {
+    throw new Error("Microsoft login failed");
+  }
+  const data = await response.json();
+  return data.token;
 }
