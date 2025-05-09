@@ -2,15 +2,22 @@ import Input from "./ui/input-label-unit";
 import Card from "./ui/card";
 import Button from "./ui/button";
 import { useContext, useState } from "react";
-import { logIn } from "../services/api";
+import { logIn, googleLogin,microsoftLoginFromMsalResponse } from "../services/api";
 import { AuthContext } from "../contexts/authcontext";
+import { useMsal } from "@azure/msal-react";
 
+import SocialLoginButton from "./ui/social-login-button";
+import microsoftIcon from "../assets/microsoft.svg";
+import GoogleLoginButton from "./ui/google-login-button";
+
+  
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   const { login } = useContext(AuthContext);
+  const { instance } = useMsal();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -26,6 +33,17 @@ export default function SignIn() {
     }
   };
 
+  const handleMicrosoftLogin = async () => {
+    try {
+      const loginResponse = await instance.loginPopup({
+        scopes: ["openid", "profile", "email"],
+      });
+      const token = await microsoftLoginFromMsalResponse(loginResponse);
+      login(token);
+    } catch (err) {
+      setError("Error amb Microsoft Login: " + (err?.message || err?.toString()));
+    }
+  };
   return (
     <div className="flex w-full h-full items-center justify-center flex-col gap-6 p-4 bg-blue-100 dark:bg-[#141414]">
       <Card className="w-full max-w-md dark:bg-[#282828]">
@@ -70,6 +88,30 @@ export default function SignIn() {
             </p>
           )}
         </form>
+        <div className="flex flex-col items-center gap-2 mt-4">
+          <span className="text-gray-500 dark:text-gray-300 text-sm mb-2">
+            Altres formes d'iniciar sessió:
+          </span>
+          <div className="flex flex-col gap-2 w-full px-6">
+            <GoogleLoginButton
+              onSuccess={async (credentialResponse) => {
+                try {
+                  const token = await googleLogin(credentialResponse.credential);
+                  login(token);
+                } catch (err) {
+                  setError("Error amb Google Login");
+                }
+              }}
+              onError={() => setError("Error amb Google Login")}
+            />
+            <SocialLoginButton
+              onClick={handleMicrosoftLogin}
+              iconSrc={microsoftIcon}
+            >
+              Inicia sessió amb Microsoft
+            </SocialLoginButton>
+          </div>
+        </div>
       </Card>
     </div>
   );
