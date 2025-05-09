@@ -9,18 +9,18 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { PublicClientApplication } from "@azure/msal-browser";
 import { MsalProvider } from "@azure/msal-react";
 
-import { API_URL } from "./services/api";
+import { LOGIN_URL } from "./services/api";
 
 /*Client ID para acceder al auth de google*/
-const clientId = "24541393337-df41pocq7fcqup1js9dr7816b2d5pq14.apps.googleusercontent.com";
+const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
 /*Client ID para acceder al auth de MICROSOFT*/
 const msalConfig = {
   auth: {
-    clientId: "bcda1a3f-9cc5-4287-814b-d1d3d975a671",
+    clientId: import.meta.env.VITE_MICROSOFT_CLIENT_ID,
     authority: "https://login.microsoftonline.com/common", // o tu tenant
-    // redirectUri: API_URL,
-    redirectUri: "http://localhost:5173",
+    redirectUri: LOGIN_URL,
+    // redirectUri: "http://localhost:5173",
   },
 };
 
