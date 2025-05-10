@@ -298,6 +298,7 @@ export default function DetailedExemplarsTable() {
                   )}
                 </thead>
 
+                {!loading && (
                 <tbody className="divide-y divide-gray-200 dark:divide-[#3c3c3c] bg-white dark:bg-[#141414]">
                   {data.map((row) => (
                     <tr
@@ -323,6 +324,7 @@ export default function DetailedExemplarsTable() {
                     </tr>
                   ))}
                 </tbody>
+                )}
               </table>
             </div>
 
