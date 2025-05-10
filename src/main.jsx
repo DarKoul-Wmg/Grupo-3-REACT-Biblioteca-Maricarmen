@@ -15,12 +15,12 @@ import { LOGIN_URL } from "./services/api";
 const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
 /*Client ID para acceder al auth de MICROSOFT*/
+
 const msalConfig = {
   auth: {
     clientId: import.meta.env.VITE_MICROSOFT_CLIENT_ID,
     authority: "https://login.microsoftonline.com/common", // o tu tenant
     redirectUri: LOGIN_URL,
-    // redirectUri: "http://localhost:5173",
   },
 };
 
