@@ -18,7 +18,7 @@ export default function Header({
     <header className="flex flex-wrap md:justify-start md:flex-nowrap z-50 w-full bg-white dark:bg-[#141414] border-b border-gray-200 dark:border-[#3c3c50]">
       <nav className="flex items-center justify-between relative w-full py-5 px-5">
         <Link href="/" className="block">
-          Biblioteca Mari Carmen Brito
+          Biblioteca Maricarmen Brito
         </Link>
         <SearchBar
           onBookSelect={handleBookSelect}
@@ -36,7 +36,10 @@ export default function Header({
           ) : (
             <>
               <span className="text-gray-800 dark:text-white font-medium ml-2 mr-2">
-                Hola, {user && user.first_name} <span role="img" aria-label="saludo">👋</span>
+                Hola, {user && user.first_name}{" "}
+                <span role="img" aria-label="saludo">
+                  👋
+                </span>
               </span>
               <Button variant="outline" onClick={logout}>
                 Tancar Sessió

@@ -128,13 +128,33 @@ export default function DetailedExemplarsTable() {
       const formattedMaxRange = maxRangeSearch.padStart(6, "0");
 
       const formattedRange = `EX-1900-${formattedMinRange}_to_EX-${currentYear}-${formattedMaxRange}`;
-      console.log("Formatted Range:", formattedRange);
       setSearchQuery(formattedRange);
     }
   }
 
+  function handleSelectAllChange(event) {
+    const isChecked = event.target.checked;
+    setSelectedItems((prev) => {
+      const newSelected = { ...prev };
+      if (isChecked) {
+        data.forEach((exemplar) => {
+          newSelected[exemplar.registre] = exemplar;
+        });
+      } else {
+        data.forEach((exemplar) => {
+          delete newSelected[exemplar.registre];
+        });
+      }
+      return newSelected;
+    });
+  }
+
+  function isAllSelected() {
+    return data.every((exemplar) => selectedItems[exemplar.registre]);
+  }
+
   return (
-    <div className="flex flex-col items-center justify-center py-5">
+    <div className="flex flex-col items-center justify-center py-5 min-w-2/3">
       <div className="overflow-x-auto flex w-full max-w-6xl gap-3 flex-col">
         <h1 className="text-4xl font-bold text-gray-800 dark:text-white">
           Cerca de Exemplars
@@ -192,7 +212,14 @@ export default function DetailedExemplarsTable() {
                   <thead className="bg-gray-50 dark:bg-[#282828]">
                     {data.length > 0 && (
                       <tr>
-                        <th className="py-3 px-4"></th>
+                        <th className="py-3 px-4">
+                          <input
+                            type="checkbox"
+                            checked={isAllSelected()}
+                            onChange={handleSelectAllChange}
+                            className="border-gray-200 rounded-sm text-blue-600 focus:ring-blue-500"
+                          />
+                        </th>
                         {columns.map((column) => (
                           <th
                             key={column.key}
@@ -210,7 +237,7 @@ export default function DetailedExemplarsTable() {
                         key={row.registre}
                         className="hover:bg-blue-100 dark:hover:bg-[#3c3c3c]"
                       >
-                        <td className="py-3 px-4">
+                        <td className="">
                           <input
                             type="checkbox"
                             checked={!!selectedItems[row.registre]}

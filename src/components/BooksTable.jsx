@@ -32,7 +32,9 @@ export default function BooksTable({
 
       {/*Indice de estados */}
       <div className="mb-4 flex gap-4 items-center">
-        <span className="ml-2 mb-4 mt-4 text-xm font-bold text-gray-600 dark:text-white">Índex d'estats: </span>
+        <span className="ml-2 mb-4 mt-4 text-xm font-bold text-gray-600 dark:text-white">
+          Índex d'estats:{" "}
+        </span>
         <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700 border border-green-700">
           Disponible
         </span>
@@ -42,7 +44,6 @@ export default function BooksTable({
         <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-600 border border-red-600">
           Exclòs de préstec
         </span>
-        
       </div>
 
       {isPending && (
@@ -94,16 +95,36 @@ export default function BooksTable({
                     <td className="px-8 py-4 text-sm text-left">
                       {(() => {
                         const exemplars = book.exemplars || [];
-                        console.log(exemplars);
-                        const countDisponible = exemplars.filter(e => e.disponible && !e.exclos_prestec).length;
-                        const countNoDisponible = exemplars.filter(e => !e.disponible && !e.exclos_prestec).length;
-                        const countExclos = exemplars.filter(e => e.exclos_prestec).length;
+                        const countDisponible = exemplars.filter(
+                          (e) => e.disponible && !e.exclos_prestec
+                        ).length;
+                        const countNoDisponible = exemplars.filter(
+                          (e) => !e.disponible && !e.exclos_prestec
+                        ).length;
+                        const countExclos = exemplars.filter(
+                          (e) => e.exclos_prestec
+                        ).length;
 
                         return (
                           <>
-                            {countDisponible > 0 && <StateCountTag count={countDisponible} type="disponible" />}
-                            {countNoDisponible > 0 && <StateCountTag count={countNoDisponible} type="nodisponible" />}
-                            {countExclos > 0 && <StateCountTag count={countExclos} type="exclos" />}
+                            {countDisponible > 0 && (
+                              <StateCountTag
+                                count={countDisponible}
+                                type="disponible"
+                              />
+                            )}
+                            {countNoDisponible > 0 && (
+                              <StateCountTag
+                                count={countNoDisponible}
+                                type="nodisponible"
+                              />
+                            )}
+                            {countExclos > 0 && (
+                              <StateCountTag
+                                count={countExclos}
+                                type="exclos"
+                              />
+                            )}
                           </>
                         );
                       })()}
