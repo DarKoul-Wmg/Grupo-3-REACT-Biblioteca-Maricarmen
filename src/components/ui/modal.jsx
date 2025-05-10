@@ -1,7 +1,9 @@
 import { useState, useContext } from "react";
 import { searchUsers, insertLoan } from "../../services/api";
+import { timeAgo } from "../../services/utils";
 import { AuthContext } from "../../contexts/authcontext";
 import { useToast } from "../../contexts/toastcontext";
+
 
 export default function Modal({
   loanDetails,
@@ -23,7 +25,6 @@ export default function Modal({
       searchTimeout = setTimeout(async () => {
         try {
           const results = await searchUsers(query, userToken);
-          console.log("User results: ", results);
           setSearchResults(results);
         } catch (error) {
           console.error("Error en la búsqueda de usuarios:", error.message);
@@ -44,7 +45,6 @@ export default function Modal({
   const handleLoan = () => {
     insertLoan(selectedUser.id, loanDetails.id)
       .then((response) => {
-        console.log("Response:", response);
         addToast(
           "success",
           `Préstec realitzat correctament amb exemplar: ${response.exemplar}`
@@ -114,7 +114,7 @@ export default function Modal({
             <div className="">
               <p className="text-xs text-gray-500 dark:text-white">Inici</p>
               <p className="text-base font-medium text-gray-700 dark:text-white">
-                {loanStart}
+                {loanStart} ({timeAgo(loanStart)})
               </p>
             </div>
             <div className="text-gray-400">
@@ -138,7 +138,7 @@ export default function Modal({
                 Fi previst de préstec
               </p>
               <p className="text-base font-medium text-gray-700 dark:text-white">
-                {loanEnd}
+                {loanEnd} ({timeAgo(loanEnd)})
               </p>
             </div>
           </div>
@@ -158,7 +158,7 @@ export default function Modal({
                 onChange={(e) => {
                   if (!selectedUser) handleSearch(e.target.value);
                 }}
-                className="w-full rounded-md border-gray-300  text-black dark:ring-white dark:focus:border-white dark:focus:ring-white shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                 className="w-full rounded-md border-gray-300 text-black dark:text-white dark:ring-white dark:focus:border-white dark:focus:ring-white shadow-sm focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 dark:placeholder-gray-400"
                 placeholder="Buscar per nom/cognom/tfn"
                 disabled={!!selectedUser} // Deshabilitar el input si hay un usuario seleccionado
               />
