@@ -19,7 +19,9 @@ export default function DetailedExemplarsTable() {
   const [maxRangeSearch, setMaxRangeSearch] = useState("");
 
   useEffect(() => {
-    fetchData();
+    if (searchQuery != "") {
+      fetchData();
+    }
   }, [currentPage, searchQuery]);
 
   useEffect(() => {
@@ -299,31 +301,31 @@ export default function DetailedExemplarsTable() {
                 </thead>
 
                 {!loading && (
-                <tbody className="divide-y divide-gray-200 dark:divide-[#3c3c3c] bg-white dark:bg-[#141414]">
-                  {data.map((row) => (
-                    <tr
-                      key={row.registre}
-                      className="hover:bg-blue-100 dark:hover:bg-[#3c3c3c]"
-                    >
-                      <td className="">
-                        <input
-                          type="checkbox"
-                          checked={!!selectedItems[row.registre]}
-                          onChange={() => handleCheckboxChange(row)}
-                          className="border-gray-200 rounded-sm text-blue-600 focus:ring-blue-500"
-                        />
-                      </td>
-                      {columns.map((column) => (
-                        <td
-                          key={column.key}
-                          className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white"
-                        >
-                          {row[column.key]}
+                  <tbody className="divide-y divide-gray-200 dark:divide-[#3c3c3c] bg-white dark:bg-[#141414]">
+                    {data.map((row) => (
+                      <tr
+                        key={row.registre}
+                        className="hover:bg-blue-100 dark:hover:bg-[#3c3c3c]"
+                      >
+                        <td className="">
+                          <input
+                            type="checkbox"
+                            checked={!!selectedItems[row.registre]}
+                            onChange={() => handleCheckboxChange(row)}
+                            className="border-gray-200 rounded-sm text-blue-600 focus:ring-blue-500"
+                          />
                         </td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
+                        {columns.map((column) => (
+                          <td
+                            key={column.key}
+                            className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white"
+                          >
+                            {row[column.key]}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
                 )}
               </table>
             </div>

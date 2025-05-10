@@ -240,7 +240,6 @@ export const generateBarcodePdf = async (codesArray) => {
   const endpoint = `${API_URL}generate-exemplars-pdf/`;
 
   try {
-    console.log("Codes to show: ", codesArray);
     const response = await fetch(endpoint, {
       method: "POST",
       headers: {
@@ -263,7 +262,6 @@ export const generateBarcodePdf = async (codesArray) => {
         console.warn("La respuesta de error del backend no era JSON:", e);
       }
     }
-    console.log("Respuesta recibida!!");
 
     // Si la respuesta es exitosa (2xx), el cuerpo debe ser el Blob del PDF
     const pdfBlob = await response.blob();
@@ -288,7 +286,6 @@ export const generateBarcodePdf = async (codesArray) => {
 
 export async function searchExemplars(queryText, page = 1, userToken) {
   try {
-    console.log("User token;", userToken);
     const response = await fetch(
       `${API_URL}exemplars/search?text=${encodeURIComponent(
         queryText
