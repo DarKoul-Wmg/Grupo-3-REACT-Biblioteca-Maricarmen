@@ -302,7 +302,7 @@ export default function DetailedExemplarsTable() {
                 </table>
               </div>
             ) : (
-              <h1>Carregant...</h1>
+              <h1 className="text-black dark:text-white">Carregant...</h1>
             )}
             {Object.keys(selectedItems).length > 0 && !loading && (
               <div className="flex items-center gap-3 p-4 dark:text-white text-black">
