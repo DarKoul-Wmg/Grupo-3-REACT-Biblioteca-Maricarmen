@@ -1,6 +1,11 @@
 const API_ROOT_LOCAL = "http://localhost:8000/api/";
 const API_ROOT_PRODUCTION = "https://biblioteca3.ieti.site/api/";
-export const API_URL = API_ROOT_LOCAL; // Ajusta según tu Django API (uso en local o producción)
+export const API_URL = API_ROOT_PRODUCTION; // Ajusta según tu Django API (uso en local o producción)
+
+const LOGIN_URL_LOCAL = "http://localhost:5173";
+const LOGIN_URL_PRODUCTION = "https://biblioteca3.ieti.site/";
+
+export const LOGIN_URL = LOGIN_URL_PRODUCTION;
 
 export const getBooks = () => {
   return fetch(API_URL + "llibres")
@@ -309,4 +314,34 @@ export async function searchExemplars(queryText, page = 1, userToken) {
     console.error("Error fetching user info:", err.message);
     throw err;
   }
+}
+
+export async function googleLogin(id_token) {
+  const response = await fetch(API_URL + "google-login/", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id_token }),
+  });
+  if (!response.ok) {
+    throw new Error("Google login failed");
+  }
+  const data = await response.json();
+  return data.token;
+}
+
+export async function microsoftLoginFromMsalResponse(msalResponse) {
+  // Extrae el idToken del objeto de respuesta de MSAL
+  const id_token = msalResponse.idToken;
+  if (!id_token) throw new Error("No se ha recibido id_token de Microsoft");
+
+  const response = await fetch(API_URL + "microsoft-login/", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id_token }),
+  });
+  if (!response.ok) {
+    throw new Error("Microsoft login failed");
+  }
+  const data = await response.json();
+  return data.token;
 }
