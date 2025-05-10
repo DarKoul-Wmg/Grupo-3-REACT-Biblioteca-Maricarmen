@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { getLoanHistory } from "../services/api";
 import { AuthContext } from "../contexts/authcontext";
+import { timeAgo } from "../services/utils";
 
 export default function LoanHistoryTable() {
   const { userToken: token } = useContext(AuthContext);
@@ -161,10 +162,20 @@ export default function LoanHistoryTable() {
                         {estat}
                       </td>
                       <td className="px-8 py-4 whitespace-nowrap text-sm text-left text-gray-800 dark:text-white">
-                        {prestec.data_prestec}
+                        <span>
+                          {prestec.data_prestec}{" "}
+                          <span className="text-xs italic text-black dark:text-white">
+                            ({timeAgo(prestec.data_prestec)})
+                          </span>
+                        </span>
                       </td>
                       <td className="px-8 py-4 whitespace-nowrap text-sm text-left text-gray-800 dark:text-white">
-                        {prestec.data_retorn}
+                        <span>
+                          {prestec.data_retorn}{" "}
+                          <span className="text-xs italic text-black dark:text-white">
+                            ({timeAgo(prestec.data_retorn)})
+                          </span>
+                        </span>
                       </td>
                       <td className="px-8 py-4 whitespace-pre-line text-sm text-left text-gray-800 break-all dark:text-white">
                         {prestec.anotacions}

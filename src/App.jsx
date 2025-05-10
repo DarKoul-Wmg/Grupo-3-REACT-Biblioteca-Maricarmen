@@ -16,6 +16,7 @@ import { searchItem } from "./services/api";
 import { useTransition } from "react";
 import LoanHistoryTable from "./components/LoanHistoryTable";
 import Modal from "./components/ui/modal";
+import DetailedExemplarsTable from "./components/detailed-exemplars-table";
 
 export default function App() {
   const { user, activeComponent, login } = useContext(AuthContext);
@@ -52,7 +53,6 @@ export default function App() {
           return;
         }
 
-        console.log("Respuesta actualización libro: ", response);
         setSelectedExemplars(response.exemplars);
       })
       .catch((error) => {
@@ -61,7 +61,6 @@ export default function App() {
   };
 
   const handleSearch = (search) => {
-    console.log("Search results: ", search);
     setSearchResults(search);
     setShowBooksTable(true);
     setShowBookDetails(false);
@@ -171,6 +170,12 @@ export default function App() {
           return <InputCsv />;
         case "LoanHistoryTable":
           return <LoanHistoryTable />;
+        case "ExemplarsTable":
+          return (
+            <>
+              <DetailedExemplarsTable />
+            </>
+          );
         case "BookDetails":
           return renderBookDetails();
         default:
@@ -198,7 +203,7 @@ export default function App() {
   }, [user, showLogin]);
 
   return (
-    <div className="min-h-screen w-screen bg-blue-100 dark:bg-[#141414] flex flex-col">
+    <div className="min-h-screen w-full bg-blue-100 dark:bg-[#141414] flex flex-col">
       <Header
         handleBookSelect={handleBookSelect}
         onSearch={handleSearch}
