@@ -25,7 +25,6 @@ export default function Modal({
       searchTimeout = setTimeout(async () => {
         try {
           const results = await searchUsers(query, userToken);
-          console.log("User results: ", results);
           setSearchResults(results);
         } catch (error) {
           console.error("Error en la búsqueda de usuarios:", error.message);
@@ -46,7 +45,6 @@ export default function Modal({
   const handleLoan = () => {
     insertLoan(selectedUser.id, loanDetails.id)
       .then((response) => {
-        console.log("Response:", response);
         addToast(
           "success",
           `Préstec realitzat correctament amb exemplar: ${response.exemplar}`

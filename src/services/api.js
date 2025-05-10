@@ -231,6 +231,91 @@ export async function insertLoan(userId, exemplarId) {
   }
 }
 
+export const generateBarcodePdf = async (codesArray) => {
+  if (!Array.isArray(codesArray) || codesArray.length === 0) {
+    // Es buena práctica validar la entrada incluso aquí
+    throw new Error("Se requiere un array de códigos no vacío.");
+  }
+
+  const endpoint = `${API_URL}generate-exemplars-pdf/`;
+
+  try {
+    console.log("Codes to show: ", codesArray);
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // 'Authorization': `Bearer ${tu_token_jwt}`
+      },
+      body: JSON.stringify({ exemplars: codesArray }), // Aquí cambias 'codes' por 'exemplars'
+    });
+
+    // Verifica si la respuesta HTTP fue exitosa (status 2xx)
+    if (!response.ok) {
+      let errorMessage = `Error del servidor: ${response.status} ${response.statusText}`;
+      try {
+        const errorData = await response.json();
+        if (errorData && errorData.error) {
+          errorMessage = errorData.error;
+        }
+      } catch (e) {
+        // Si el cuerpo del error no es JSON válido, ignora y usa el mensaje HTTP
+        console.warn("La respuesta de error del backend no era JSON:", e);
+      }
+    }
+    console.log("Respuesta recibida!!");
+
+    // Si la respuesta es exitosa (2xx), el cuerpo debe ser el Blob del PDF
+    const pdfBlob = await response.blob();
+
+    // Verifica si el blob recibido es realmente un PDF (opcional pero recomendado)
+    if (pdfBlob.type !== "application/pdf") {
+      console.warn(`Se esperaba un PDF pero se recibió tipo: ${pdfBlob.type}`);
+      // Puedes decidir lanzar un error aquí también si es crítico
+      // throw new Error("La respuesta del servidor no fue un archivo PDF válido.");
+    }
+
+    // Crea una URL local para el Blob
+    const fileURL = URL.createObjectURL(pdfBlob);
+
+    return fileURL;
+  } catch (error) {
+    // Captura errores de red o los errores lanzados arriba
+    console.error("Error en generateBarcodePdf API:", error);
+    throw error;
+  }
+};
+
+export async function searchExemplars(queryText, page = 1, userToken) {
+  try {
+    console.log("User token;", userToken);
+    const response = await fetch(
+      `${API_URL}exemplars/search?text=${encodeURIComponent(
+        queryText
+      )}&page=${page}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      if (response.status === 500) {
+        throw new Error("Server error: Unable to process the request");
+      }
+      throw new Error("Failed to fetch user info");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    console.error("Error fetching user info:", err.message);
+    throw err;
+  }
+}
+
 export async function googleLogin(id_token) {
   const response = await fetch(API_URL + "google-login/", {
     method: "POST",

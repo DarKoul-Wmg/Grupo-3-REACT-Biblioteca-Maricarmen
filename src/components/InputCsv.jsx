@@ -2,6 +2,7 @@ import { useState } from "react";
 import { importCsv } from "../services/api";
 import Button from "./ui/button";
 
+import { generateBarcodePdf } from "../services/api";
 export default function InputCsv() {
   const [file, setFile] = useState(null);
   const [responseData, setResponseData] = useState({
@@ -56,9 +57,9 @@ export default function InputCsv() {
   return (
     <div className="w-full flex items-center justify-center dark:bg-[#282828] bg-blue-100">
       <div className="flex items-center justify-center flex-col gap-4">
-      <h1 className="text-5xl font-bold text-gray-800 dark:text-white mb-2 mt-0">
-      Importar Usuaris
-    </h1>
+        <h1 className="text-5xl font-bold text-gray-800 dark:text-white mb-2 mt-0">
+          Importar Usuaris
+        </h1>
         <div className="flex items-center justify-center flex-col gap-2">
           <label className="text-sm font-medium text-gray-700 dark:text-white">
             Selecciona un arxiu CSV:
@@ -101,22 +102,21 @@ export default function InputCsv() {
 
         {responseData.message && (
           <p className="mt-6 text-black dark:text-white">
-          Importació completada. Usuaris importats:{" "}
-          <span className="text-green-600 font-bold">
-            {responseData.imported}
-          </span>
-          . Errors:{" "}
-          <span className="text-red-600 font-bold">
-            {responseData.errorCount}
-          </span>
-          . Warnings:{" "}
-          <span className="text-yellow-600 font-bold">
-            {responseData.warningCount}
-          </span>
+            Importació completada. Usuaris importats:{" "}
+            <span className="text-green-600 font-bold">
+              {responseData.imported}
+            </span>
+            . Errors:{" "}
+            <span className="text-red-600 font-bold">
+              {responseData.errorCount}
+            </span>
+            . Warnings:{" "}
+            <span className="text-yellow-600 font-bold">
+              {responseData.warningCount}
+            </span>
           </p>
         )}
-
-{(responseData.resultsMessage.length > 0 ||
+        {(responseData.resultsMessage.length > 0 ||
           responseData.resultsStatus.length > 0 ||
           responseData.imported > 0) && (
           <div className="w-full max-w-2xl mt-4 rounded-lg overflow-hidden border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#181818] shadow">
@@ -139,9 +139,11 @@ export default function InputCsv() {
                   {responseData.resultsMessage.map((error, index) => {
                     const lineNumber = error.match(/\d+/)?.[0] || "N/A";
                     const errorType =
-                      responseData.resultsStatus[index]?.toLowerCase() === "warning"
+                      responseData.resultsStatus[index]?.toLowerCase() ===
+                      "warning"
                         ? "Avís"
-                        : responseData.resultsStatus[index]?.toLowerCase() === "success"
+                        : responseData.resultsStatus[index]?.toLowerCase() ===
+                          "success"
                         ? "Èxit"
                         : "Error";
                     const textColor =
