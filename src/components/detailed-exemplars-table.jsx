@@ -120,9 +120,9 @@ export default function DetailedExemplarsTable() {
             window.addEventListener("message", handlePrintEvent);
 
             // Inyectar script en el iframe para escuchar afterprint y notificar al padre
-            iframeWindow.onafterprint = () => {
-              iframeWindow.parent.postMessage("print-finished", "*");
-            };
+            // iframeWindow.onafterprint = () => {
+            //   iframeWindow.parent.postMessage("print-finished", "*");
+            // };
 
             iframeWindow.focus();
             iframeWindow.print();
