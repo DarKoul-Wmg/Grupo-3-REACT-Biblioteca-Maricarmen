@@ -78,17 +78,60 @@ export default function DetailedExemplarsTable() {
         center: item.centre,
       }));
 
-      const pdfBlob = await generateBarcodePdf(formattedArray);
+      const pdfUrl = await generateBarcodePdf(formattedArray);
+      if (document.getElementById("printIframe")) {
+        document.getElementById("printIframe").remove();
+      }
+
+      // Create a fullscreen iframe
       const iframe = document.createElement("iframe");
-      iframe.style.visibility = "hidden";
-      iframe.src = pdfBlob;
+      iframe.id = "printIframe";
+      iframe.style.position = "fixed";
+      iframe.style.top = "0";
+      iframe.style.left = "0";
+      iframe.style.width = "100vw";
+      iframe.style.height = "00vh";
+      iframe.style.zIndex = "9999";
+      iframe.style.border = "none";
+      iframe.src = pdfUrl;
       document.body.appendChild(iframe);
+
+      // Wait for the PDF to load inside the iframe before printing
+      iframe.oncancel = () => {
+        document.body.removeChild(iframe);
+      };
 
       iframe.onload = () => {
         setTimeout(() => {
-          iframe.contentWindow.focus();
-          iframe.contentWindow.print();
-          document.body.removeChild(iframe);
+          try {
+            const iframeWindow = iframe.contentWindow;
+
+            const cleanup = () => {
+              iframe.remove(); // Eliminar iframe del DOM
+              window.removeEventListener("message", handlePrintEvent); // Limpieza adicional
+            };
+
+            // Alternativa más robusta: usar 'message' para comunicarse con el iframe si el afterprint no es confiable
+            const handlePrintEvent = (event) => {
+              if (event.data === "print-finished") {
+                cleanup();
+              }
+            };
+            window.addEventListener("message", handlePrintEvent);
+
+            // Inyectar script en el iframe para escuchar afterprint y notificar al padre
+            iframeWindow.onafterprint = () => {
+              iframeWindow.parent.postMessage("print-finished", "*");
+            };
+
+            iframeWindow.focus();
+            iframeWindow.print();
+          } catch (e) {
+            console.error("Error printing PDF:", e);
+            alert("No se pudo imprimir automáticamente.");
+          } finally {
+            URL.revokeObjectURL(pdfUrl);
+          }
         }, 500);
       };
     } catch (error) {
