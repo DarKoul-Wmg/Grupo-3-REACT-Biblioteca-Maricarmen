@@ -32,6 +32,7 @@ export default function DetailedExemplarsTable() {
     setSearchQuery("");
     setMinRangeSearch("");
     setMaxRangeSearch("");
+    setData([]);
   }, [selectedSearch]);
 
   async function fetchData() {
