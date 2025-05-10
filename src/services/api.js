@@ -280,3 +280,33 @@ export const generateBarcodePdf = async (codesArray) => {
     throw error;
   }
 };
+
+export async function searchExemplars(queryText, page = 1, userToken) {
+  try {
+    console.log("User token;", userToken);
+    const response = await fetch(
+      `${API_URL}exemplars/search?text=${encodeURIComponent(
+        queryText
+      )}&page=${page}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      if (response.status === 500) {
+        throw new Error("Server error: Unable to process the request");
+      }
+      throw new Error("Failed to fetch user info");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    console.error("Error fetching user info:", err.message);
+    throw err;
+  }
+}
