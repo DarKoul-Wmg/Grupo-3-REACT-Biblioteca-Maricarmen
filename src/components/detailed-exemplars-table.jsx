@@ -28,10 +28,12 @@ export default function DetailedExemplarsTable() {
 
   useEffect(() => {
     setSearchQuery("");
+    setMinRangeSearch("");
+    setMaxRangeSearch("");
   }, [selectedSearch]);
 
   async function fetchData() {
-    if (searchQuery.length < 3) {
+    if (selectedSearch == "text_search" && searchQuery.length < 3) {
       setData([]);
       return;
     }
@@ -165,13 +167,19 @@ export default function DetailedExemplarsTable() {
   ];
 
   function processsRangeChange() {
-    if (maxRangeSearch && minRangeSearch) {
-      const currentYear = new Date().getFullYear();
-      const formattedMinRange = minRangeSearch.padStart(6, "0");
-      const formattedMaxRange = maxRangeSearch.padStart(6, "0");
+    if (selectedSearch == "id_search" && maxRangeSearch && minRangeSearch) {
+      if (Number(minRangeSearch) > Number(maxRangeSearch)) {
+        setData([]);
+      } else {
+        const currentYear = new Date().getFullYear();
+        const formattedMinRange = minRangeSearch.padStart(6, "0");
+        const formattedMaxRange = maxRangeSearch.padStart(6, "0");
 
-      const formattedRange = `EX-1900-${formattedMinRange}_to_EX-${currentYear}-${formattedMaxRange}`;
-      setSearchQuery(formattedRange);
+        const formattedRange = `EX-${currentYear}-${formattedMinRange}_to_EX-${currentYear}-${formattedMaxRange}`;
+        setSearchQuery(formattedRange);
+      }
+    } else {
+      setData([]);
     }
   }
 
@@ -225,7 +233,7 @@ export default function DetailedExemplarsTable() {
                   placeholder="Cerca per autor/item/editorial"
                 />
               ) : (
-                <div className="flex gap-2 items-center dark:text-white">
+                <div className="flex gap-2 items-center dark:text-white text-black">
                   <label htmlFor="minRangeSearch">Minim:</label>
                   <input
                     type="number"
@@ -234,7 +242,7 @@ export default function DetailedExemplarsTable() {
                     onChange={(e) => {
                       setMinRangeSearch(e.target.value);
                     }}
-                    className="py-1.5 px-3 w-full border-gray-200 shadow-2xs rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-[#1e1e1e] dark:border-[#3c3c3c] dark:text-white"
+                    className="py-1.5 px-3 w-full border-gray-200 shadow-2xs rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-[#1e1e1e] bg-white dark:border-[#3c3c3c] dark:text-white"
                   />
                   <label htmlFor="maxRangeSearch">Maxim:</label>
                   <input
@@ -244,66 +252,80 @@ export default function DetailedExemplarsTable() {
                     onChange={(e) => {
                       setMaxRangeSearch(e.target.value);
                     }}
-                    className="py-1.5 px-3 w-full border-gray-200 shadow-2xs rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-[#1e1e1e] dark:border-[#3c3c3c] dark:text-white"
+                    className="py-1.5 px-3 w-full border-gray-200 shadow-2xs rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-[#1e1e1e] bg-white dark:border-[#3c3c3c] dark:text-white"
                   />
                 </div>
               )}
             </div>
-            {!loading ? (
-              <div className="overflow-hidden w-full">
-                <table className="min-w-full divide-y divide-gray-200 dark:divide-[#3c3c3c]">
-                  <thead className="bg-gray-50 dark:bg-[#282828]">
-                    {data.length > 0 && (
-                      <tr>
-                        <th className="py-3 px-4">
-                          <input
-                            type="checkbox"
-                            checked={isAllSelected()}
-                            onChange={handleSelectAllChange}
-                            className="border-gray-200 rounded-sm text-blue-600 focus:ring-blue-500"
-                          />
-                        </th>
-                        {columns.map((column) => (
-                          <th
-                            key={column.key}
-                            className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-white"
-                          >
-                            {column.label}
+            <div className="overflow-hidden w-full">
+              <table className="min-w-full divide-y divide-gray-200 dark:divide-[#3c3c3c]">
+                <thead className="bg-gray-50 dark:bg-[#282828]">
+                  {!loading ? (
+                    <>
+                      {data.length > 0 ? (
+                        <tr>
+                          <th className="py-3 px-4">
+                            <input
+                              type="checkbox"
+                              checked={isAllSelected()}
+                              onChange={handleSelectAllChange}
+                              className="border-gray-200 rounded-sm text-blue-600 focus:ring-blue-500"
+                            />
                           </th>
-                        ))}
-                      </tr>
-                    )}
-                  </thead>
-                  <tbody className="divide-y divide-gray-200 dark:divide-[#3c3c3c] bg-white dark:bg-[#141414]">
-                    {data.map((row) => (
-                      <tr
-                        key={row.registre}
-                        className="hover:bg-blue-100 dark:hover:bg-[#3c3c3c]"
-                      >
-                        <td className="">
-                          <input
-                            type="checkbox"
-                            checked={!!selectedItems[row.registre]}
-                            onChange={() => handleCheckboxChange(row)}
-                            className="border-gray-200 rounded-sm text-blue-600 focus:ring-blue-500"
-                          />
+                          {columns.map((column) => (
+                            <th
+                              key={column.key}
+                              className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-white"
+                            >
+                              {column.label}
+                            </th>
+                          ))}
+                        </tr>
+                      ) : (
+                        <tr>
+                          <th className="py-3 px-4 text-black dark:text-white ">
+                            <h1>No s'han trobat exemplars</h1>
+                          </th>
+                        </tr>
+                      )}
+                    </>
+                  ) : (
+                    <tr>
+                      <th className="py-3 px-4 text-dark dark:text-white">
+                        <h1>Carregant...</h1>
+                      </th>
+                    </tr>
+                  )}
+                </thead>
+
+                <tbody className="divide-y divide-gray-200 dark:divide-[#3c3c3c] bg-white dark:bg-[#141414]">
+                  {data.map((row) => (
+                    <tr
+                      key={row.registre}
+                      className="hover:bg-blue-100 dark:hover:bg-[#3c3c3c]"
+                    >
+                      <td className="">
+                        <input
+                          type="checkbox"
+                          checked={!!selectedItems[row.registre]}
+                          onChange={() => handleCheckboxChange(row)}
+                          className="border-gray-200 rounded-sm text-blue-600 focus:ring-blue-500"
+                        />
+                      </td>
+                      {columns.map((column) => (
+                        <td
+                          key={column.key}
+                          className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white"
+                        >
+                          {row[column.key]}
                         </td>
-                        {columns.map((column) => (
-                          <td
-                            key={column.key}
-                            className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white"
-                          >
-                            {row[column.key]}
-                          </td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            ) : (
-              <h1 className="text-black dark:text-white">Carregant...</h1>
-            )}
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
             {Object.keys(selectedItems).length > 0 && !loading && (
               <div className="flex items-center gap-3 p-4 dark:text-white text-black">
                 <span className="text-sm">

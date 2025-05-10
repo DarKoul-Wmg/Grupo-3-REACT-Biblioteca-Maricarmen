@@ -164,7 +164,7 @@ export default function LoanHistoryTable() {
                       <td className="px-8 py-4 whitespace-nowrap text-sm text-left text-gray-800 dark:text-white">
                         <span>
                           {prestec.data_prestec}{" "}
-                          <span className="text-xs italic text-gray-500">
+                          <span className="text-xs italic text-black dark:text-white">
                             ({timeAgo(prestec.data_prestec)})
                           </span>
                         </span>
@@ -172,7 +172,7 @@ export default function LoanHistoryTable() {
                       <td className="px-8 py-4 whitespace-nowrap text-sm text-left text-gray-800 dark:text-white">
                         <span>
                           {prestec.data_retorn}{" "}
-                          <span className="text-xs italic text-gray-500">
+                          <span className="text-xs italic text-black dark:text-white">
                             ({timeAgo(prestec.data_retorn)})
                           </span>
                         </span>
